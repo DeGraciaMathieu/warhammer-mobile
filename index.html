@@ -301,6 +301,7 @@ import {ROWS,COLS,DIRS,FALLBACK,MAPGEN,INITIAL_FORCES,TNAME,TDEF,COST,U,ROSTER,F
         DEF_POINT_PCT,CAPTURE_GAUGE,START_REQUISITION,BUILDING_HEAL,AI,T,MIN_TILE,BOARD_MARGIN,
         AUDIO,VIB} from './src/config.js';
 import {mulberry32,randomSeed} from './src/rng.js';
+import * as G from './src/rules/grid.js';
 /* ============================================================ DONNÉES */
 let MAP=[], SEED=0;
 
@@ -455,13 +456,12 @@ let S=null, TS=44, uid=1;
 const aiRng=mulberry32(randomSeed());
 const board=document.getElementById('board');
 const $=id=>document.getElementById(id);
-const key=(r,c)=>r*COLS+c;
-const inb=(r,c)=>r>=0&&r<ROWS&&c>=0&&c<COLS;
+const key=G.key, inb=G.inb;
 const tile=(r,c)=>MAP[r][c];
 const bars=u=>Math.max(1,Math.ceil(u.hp/HP_PER_BAR));
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-const unitAt=(r,c)=>S.units.find(u=>u.hp>0&&u.r===r&&u.c===c);
-const bldAt=(r,c)=>S.blds.find(b=>b.r===r&&b.c===c);
+const unitAt=(r,c)=>G.unitAt(S.units,r,c);
+const bldAt=(r,c)=>G.bldAt(S.blds,r,c);
 
 function newGame(seed){
   genMap(seed===undefined?randomSeed():seed);
@@ -634,7 +634,7 @@ function reachable(u){
   }
   return {dist,prev};
 }
-function canStop(u,r,c){const o=unitAt(r,c);return !o||o===u;}
+const canStop=(u,r,c)=>G.canStop(S.units,u,r,c);
 function pathTo(u,r,c){
   const p=[]; let k=key(r,c);
   while(k!==undefined&&k!==key(u.r,u.c)){p.unshift(k);k=S.prev.get(k);}
