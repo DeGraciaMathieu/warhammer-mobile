@@ -44,7 +44,8 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
 .iconbtn.on{border-color:var(--rust);color:#ffb08a;background:#2a1610}
 
 /* ---------- plateau ---------- */
-#wrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:8px;position:relative}
+/* align-items:flex-start : le plateau reste ancré en haut quand le panneau bas grandit */
+#wrap{flex:1;min-height:0;display:flex;align-items:flex-start;justify-content:center;padding:8px;position:relative}
 #board{position:relative;background:#0e1317;
   box-shadow:0 0 0 1px #000,0 0 0 5px #232a31,0 0 0 6px #000,0 14px 34px #000c}
 #board::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;opacity:.5;
@@ -102,7 +103,8 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
 
 /* ---------- panneau bas ---------- */
 #bot{background:linear-gradient(#1c1a17,#121110);border-top:2px solid #000;box-shadow:0 -2px 0 #3a3833 inset;
-  padding:8px 10px calc(8px + env(safe-area-inset-bottom));min-height:118px;display:flex;flex-direction:column;gap:7px}
+  padding:8px 10px calc(8px + env(safe-area-inset-bottom));min-height:118px;display:flex;flex-direction:column;gap:7px;
+  position:relative;z-index:10}
 #msg{font-size:13px;opacity:.75;line-height:1.25;min-height:16px}
 #card{display:flex;gap:9px;align-items:center}
 #card .por{width:46px;height:46px;border-radius:2px;flex:0 0 auto;display:flex;align-items:center;justify-content:center}
