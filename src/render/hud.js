@@ -1,6 +1,6 @@
 /* HUD — barre haute, panneau bas, fiche d'unité, relevé de combat, boutique.
    Les boutons déclenchent des actions de la boucle, liées par main.js via bindActions. */
-import {U,TDEF,FNAME,ROSTER,HP_PER_BAR,BARS_MAX,DEF_POINT_PCT,AUDIO,VIB} from '../config.js';
+import {U,TDEF,FNAME,ROSTER,BARS_MAX,DEF_POINT_PCT,AUDIO,VIB} from '../config.js';
 import {S,tile} from '../state/state.js';
 import {bldAt} from '../rules/grid.js';
 import {bars} from '../rules/combat.js';
@@ -40,7 +40,7 @@ export function renderHud(keepMsg){
   $('fdot').style.color=S.side==='sm'?'var(--sm)':'var(--ork)';
   $('req').textContent=S.req[S.side];
   $('btnDanger').classList.toggle('on',S.danger);
-  $('preview').style.display='none'; $('shop').style.display='none';
+  $('shop').style.display='none';
   $('combat').classList.remove('show');
   const acts=$('acts'); acts.innerHTML='';
 
@@ -81,13 +81,9 @@ export function renderHud(keepMsg){
     return;
   }
   if(S.phase==='preview'){
-    unitCard(S.sel);
-    const p=S.pending,bar=$('preview');
+    /* tout le détail est dans le relevé de combat : le panneau bas ne garde que les boutons */
+    hideCard();
     renderCombatPanel();
-    bar.style.display='flex';
-    bar.innerHTML=
-      `<div class="side">Cible · ${U[p.t.t].n}<br><span class="big ${p.hpAfter===0?'dead':''}">${bars(p.t)} → ${p.hpAfter===0?'détruite':Math.max(1,Math.ceil(p.hpAfter/HP_PER_BAR))}</span></div>`+
-      `<div class="side" style="text-align:right">Riposte subie<br><span class="big ${p.myAfter===0?'dead':''}">${bars(S.sel)} → ${p.ct===0?'aucune':(p.myAfter===0?'détruite':Math.max(1,Math.ceil(p.myAfter/HP_PER_BAR)))}</span></div>`;
     msg("");
     addBtn('Confirmer l\'attaque','warn',()=>A.confirmAttack());
     addBtn('Autre cible','ghost',()=>A.backToTarget());

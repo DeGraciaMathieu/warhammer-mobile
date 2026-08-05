@@ -129,16 +129,12 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
 .btn.warn{background:linear-gradient(#7a1f16,#4d100b);border-color:#c0392b}
 .btn.ghost{background:#141311;opacity:.85;flex:0 0 auto;min-width:56px}
 .btn[disabled]{opacity:.35}
-#preview{display:flex;gap:8px;align-items:center;padding:7px 9px;border:1px solid var(--rust);border-radius:4px;
-  background:#1d100c;font-variant-numeric:tabular-nums}
-#preview .side{flex:1;font-size:12px}
-#preview .big{font-family:Oswald,sans-serif;font-size:19px}
 .dead{color:#ff7a5c}
 
 /* relevé de combat */
 #combat{position:absolute;left:6px;right:6px;bottom:4px;z-index:20;display:none;
   background:#0c1117f5;border:1px solid var(--steel);border-top-color:#5a6672;border-radius:4px;
-  box-shadow:0 12px 34px #000c;padding:9px 11px 10px;max-height:66%;overflow:auto}
+  box-shadow:0 12px 34px #000c;padding:9px 11px 10px;max-height:calc(100% - 10px);overflow:auto}
 #combat.show{display:block;animation:rise .18s ease-out}
 @keyframes rise{from{opacity:0;transform:translateY(8px)}}
 #combat .ch{display:flex;align-items:center;gap:6px;font-size:12.5px;margin-bottom:7px;
@@ -283,7 +279,6 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
       <div id="stats"></div>
     </div>
   </div>
-  <div id="preview" style="display:none"></div>
   <div id="shop" style="display:none"></div>
   <div id="acts"></div>
 </div>
