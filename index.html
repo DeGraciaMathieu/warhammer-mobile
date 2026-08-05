@@ -306,6 +306,7 @@ import * as C from './src/rules/combat.js';
 import * as M from './src/rules/movement.js';
 import {generateMap,initialPlacements} from './src/rules/mapgen.js';
 import {turnIncome,healedHp,captureProgress,winnerOf} from './src/rules/turn.js';
+import * as D from './src/rules/deploy.js';
 /* ============================================================ DONNÉES */
 let MAP=[], SEED=0;
 
@@ -916,10 +917,7 @@ function renderHud(keepMsg){
     addBtn('Retour','ghost',()=>{S.phase='idle';render();});
   }
 }
-function canDeploy(){
-  const hq=S.blds.find(b=>b.kind==='hq'&&b.own===S.side);
-  return hq&&!unitAt(hq.r,hq.c)&&S.req[S.side]>=Math.min(...ROSTER[S.side].map(t=>U[t].cost));
-}
+const canDeploy=()=>D.canDeploy(S.blds,S.units,S.req[S.side],S.side);
 let cyc=0;
 function cycleNext(){
   const l=S.units.filter(u=>u.hp>0&&u.s===S.side&&!u.acted);
