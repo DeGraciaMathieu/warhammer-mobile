@@ -298,13 +298,14 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
 <script type="module">
 import {ROWS,COLS,TNAME,TDEF,U,ROSTER,FNAME,
         UNIT_MAX_HP,HP_PER_BAR,BARS_MAX,CODEX_FLOOR,DEF_POINT_PCT,CAPTURE_GAUGE,
-        START_REQUISITION,BUILDING_HEAL,AI,T,MIN_TILE,BOARD_MARGIN,
+        START_REQUISITION,AI,T,MIN_TILE,BOARD_MARGIN,
         AUDIO,VIB} from './src/config.js';
 import {mulberry32,randomSeed} from './src/rng.js';
 import * as G from './src/rules/grid.js';
 import * as C from './src/rules/combat.js';
 import * as M from './src/rules/movement.js';
 import {generateMap,initialPlacements} from './src/rules/mapgen.js';
+import {turnIncome,healedHp,captureProgress,winnerOf} from './src/rules/turn.js';
 /* ============================================================ DONNÉES */
 let MAP=[], SEED=0;
 
@@ -617,9 +618,10 @@ function killed(d){
 }
 function capture(){
   const u=S.sel,b=bldAt(u.r,u.c);
-  b.cap-=bars(u); u.capturing=true; play(AUDIO.CAPTURE);
-  if(b.cap<=0){
-    b.cap=CAPTURE_GAUGE; b.own=u.s; u.capturing=false;
+  const res=captureProgress(b.cap,bars(u));
+  b.cap=res.cap; u.capturing=!res.captured; play(AUDIO.CAPTURE);
+  if(res.captured){
+    b.own=u.s;
     msg(b.kind==='hq'?"Forteresse prise !":"Bastion sécurisé. +1 réquisition par cycle.");
   }
   finishUnit(u);
@@ -654,11 +656,11 @@ function buy(t){
 function startTurn(side){
   S.side=side;
   if(side==='sm')S.turn++;
-  S.req[side]+=S.blds.filter(b=>b.own===side).length;
+  S.req[side]+=turnIncome(S.blds,side);
   S.units.filter(u=>u.s===side&&u.hp>0).forEach(u=>{
     u.acted=false;u.moved=false;
     const b=bldAt(u.r,u.c);
-    if(b&&b.own===side&&u.hp<UNIT_MAX_HP){u.hp=Math.min(UNIT_MAX_HP,u.hp+BUILDING_HEAL);}
+    if(b&&b.own===side)u.hp=healedHp(u.hp);
   });
   S.sel=null;S.phase=side==='sm'?'idle':'ai';S.targets=[];S.pending=null;
   render();
@@ -671,11 +673,7 @@ function endTurn(){
   startTurn('ork'); setTimeout(aiTurn,T.AI_TURN_START);
 }
 function checkEnd(){
-  const smHQ=S.hq.sm, orkHQ=S.hq.ork;
-  const smU=S.units.filter(u=>u.hp>0&&u.s==='sm').length, orkU=S.units.filter(u=>u.hp>0&&u.s==='ork').length;
-  let win=null;
-  if(orkHQ.own==='sm'||orkU===0) win='sm';
-  if(smHQ.own==='ork'||smU===0) win='ork';
+  const win=winnerOf(S.units,S.hq.sm,S.hq.ork);
   if(win){S.over=true;S.phase='over';render();showEnd(win);return true;}
   return false;
 }
