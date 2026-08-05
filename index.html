@@ -307,6 +307,7 @@ import * as M from './src/rules/movement.js';
 import {generateMap,initialPlacements} from './src/rules/mapgen.js';
 import {turnIncome,healedHp,captureProgress,winnerOf} from './src/rules/turn.js';
 import * as D from './src/rules/deploy.js';
+import {chooseBuy,bestAttack,advanceObjective,bestAdvanceSpot} from './src/rules/ai.js';
 /* ============================================================ DONNÉES */
 let MAP=[], SEED=0;
 
@@ -699,10 +700,8 @@ async function aiTurn(){
 function aiBuy(rng){
   const hq=S.blds.find(b=>b.kind==='hq'&&b.own==='ork');
   if(!hq||unitAt(hq.r,hq.c))return;
-  const r=S.req.ork;
-  const choice=AI.BUY.find(o=>r>=o.req&&(o.p>=1||rng()<o.p));
-  if(!choice)return;
-  const pick=choice.t;
+  const pick=chooseBuy(S.req.ork,rng);
+  if(!pick)return;
   S.req.ork-=U[pick].cost;
   S.units.push({id:uid++,t:pick,s:'ork',r:hq.r,c:hq.c,hp:UNIT_MAX_HP,acted:true});
   render();
@@ -710,18 +709,7 @@ function aiBuy(rng){
 async function aiAct(u){
   const {dist,prev}=reachable(u); S.reach=dist; S.prev=prev; S.sel=u; S.from={r:u.r,c:u.c};
   const spots=[...dist.keys()].filter(k=>canStop(u,(k/COLS)|0,k%COLS));
-  let best=null;
-  for(const k of spots){
-    const r=(k/COLS)|0,c=k%COLS;
-    for(const e of targetsFrom(u,r,c)){
-      const d=dmgCalc(u,e,r,c), kill=d>=e.hp;
-      const ct=kill?0:counterOf(u,e,r,c);
-      const sc=Math.min(d,e.hp)*1 + (kill?AI.KILL_BONUS:0) - ct*AI.COUNTER_WEIGHT
-               + TDEF[tile(r,c)]*AI.TERRAIN_WEIGHT + U[e.t].cost*AI.COST_WEIGHT
-               + (U[e.t].rng[1]>1?AI.INDIRECT_BONUS:0);
-      if(!best||sc>best.sc)best={sc,r,c,e};
-    }
-  }
+  const best=bestAttack(S.units,MAP,u,dist);
   if(best&&best.sc>AI.ATTACK_THRESHOLD){
     await aiMove(u,best.r,best.c);
     S.targets=[best.e]; S.pending={t:best.e};
@@ -742,20 +730,10 @@ async function aiAct(u){
     if(objs.length){ await aiMove(u,objs[0].r,objs[0].c); S.sel=u; capture(); return; }
   }
   // avance
-  let tgt=null,bd=1e9;
-  const cands=S.units.filter(e=>e.hp>0&&e.s==='sm');
-  const objs=S.blds.filter(b=>b.own!=='ork');
-  [...cands.map(e=>({r:e.r,c:e.c,w:0})),...objs.map(b=>({r:b.r,c:b.c,w:U[u.t].inf?AI.OBJ_WEIGHT_INF:AI.OBJ_WEIGHT_NONINF}))].forEach(o=>{
-    const d=Math.abs(o.r-u.r)+Math.abs(o.c-u.c)+o.w;
-    if(d<bd){bd=d;tgt=o;}
-  });
+  const tgt=advanceObjective(S.units,S.blds,u);
   if(tgt){
     const field=costField(tgt.r,tgt.c,U[u.t].cls);
-    let bk=null,bv=1e9;
-    for(const k of spots){
-      const v=(field.get(k)??1e9)-TDEF[tile((k/COLS)|0,k%COLS)]*AI.ADVANCE_COVER_WEIGHT;
-      if(v<bv){bv=v;bk=k;}
-    }
+    const bk=bestAdvanceSpot(MAP,field,spots);
     if(bk!=null&&bk!==key(u.r,u.c)) await aiMove(u,(bk/COLS)|0,bk%COLS);
   }
   u.acted=true;u.moved=false;S.sel=null;render();
