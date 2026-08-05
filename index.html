@@ -296,13 +296,14 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
 </div>
 
 <script type="module">
-import {ROWS,COLS,DIRS,FALLBACK,MAPGEN,INITIAL_FORCES,TNAME,TDEF,COST,U,ROSTER,FNAME,
+import {ROWS,COLS,DIRS,FALLBACK,MAPGEN,INITIAL_FORCES,TNAME,TDEF,U,ROSTER,FNAME,
         UNIT_MAX_HP,HP_PER_BAR,BARS_MAX,CODEX_FLOOR,DEF_POINT_PCT,CAPTURE_GAUGE,
         START_REQUISITION,BUILDING_HEAL,AI,T,MIN_TILE,BOARD_MARGIN,
         AUDIO,VIB} from './src/config.js';
 import {mulberry32,randomSeed} from './src/rng.js';
 import * as G from './src/rules/grid.js';
 import * as C from './src/rules/combat.js';
+import * as M from './src/rules/movement.js';
 /* ============================================================ DONNÉES */
 let MAP=[], SEED=0;
 
@@ -616,57 +617,15 @@ function renderOv(){
 }
 
 /* ============================================================ RÈGLES */
-function reachable(u){
-  const cost=COST[U[u.t].cls], dist=new Map(), prev=new Map(), pq=[[0,u.r,u.c]];
-  dist.set(key(u.r,u.c),0);
-  while(pq.length){
-    pq.sort((a,b)=>a[0]-b[0]);
-    const [d,r,c]=pq.shift();
-    if(d>(dist.get(key(r,c))??Infinity))continue;
-    for(const [dr,dc] of DIRS){
-      const nr=r+dr,nc=c+dc; if(!inb(nr,nc))continue;
-      const cc=cost[tile(nr,nc)]; if(cc==null)continue;
-      const o=unitAt(nr,nc); if(o&&o.s!==u.s)continue;
-      const nd=d+cc;
-      if(nd<=U[u.t].mv&&nd<(dist.get(key(nr,nc))??Infinity)){
-        dist.set(key(nr,nc),nd); prev.set(key(nr,nc),key(r,c)); pq.push([nd,nr,nc]);
-      }
-    }
-  }
-  return {dist,prev};
-}
+const reachable=u=>M.reachable(S.units,MAP,u);
 const canStop=(u,r,c)=>G.canStop(S.units,u,r,c);
-function pathTo(u,r,c){
-  const p=[]; let k=key(r,c);
-  while(k!==undefined&&k!==key(u.r,u.c)){p.unshift(k);k=S.prev.get(k);}
-  return p;
-}
-function atkFootprint(u){
-  const [a,b]=U[u.t].rng, out=new Set();
-  const origins = b>1 ? [key(u.r,u.c)] : [...S.reach.keys()].filter(k=>canStop(u,(k/COLS)|0,k%COLS));
-  origins.forEach(k=>{
-    const r=(k/COLS)|0,c=k%COLS;
-    for(let dr=-b;dr<=b;dr++)for(let dc=-b;dc<=b;dc++){
-      const m=Math.abs(dr)+Math.abs(dc);
-      if(m<a||m>b)continue;
-      if(inb(r+dr,c+dc)) out.add(key(r+dr,c+dc));
-    }
-  });
-  return out;
-}
+const pathTo=(u,r,c)=>M.pathTo(S.prev,u,r,c);
+const atkFootprint=u=>M.atkFootprint(S.units,S.reach,u);
 const targetsFrom=(u,r,c)=>C.targetsFrom(S.units,u,r,c);
 const dmgDetail=(a,d,ar,ac)=>C.dmgDetail(S.units,MAP,a,d,ar,ac);
 const dmgCalc=(a,d,ar,ac)=>C.dmgCalc(S.units,MAP,a,d,ar,ac);
 const counterOf=(a,d,ar,ac)=>C.counterOf(S.units,MAP,a,d,ar,ac);
-function threatZone(side){
-  const out=new Set();
-  S.units.filter(u=>u.hp>0&&u.s===side).forEach(u=>{
-    const save=S.reach; S.reach=reachable(u).dist;
-    atkFootprint(u).forEach(k=>out.add(k));
-    S.reach=save;
-  });
-  return out;
-}
+const threatZone=side=>M.threatZone(S.units,MAP,side);
 
 /* ============================================================ ACTIONS JOUEUR */
 board.addEventListener('click',e=>{
@@ -845,20 +804,7 @@ function checkEnd(){
 }
 
 /* ============================================================ IA ORK */
-function costField(tr,tc,cls){
-  const cost=COST[cls],dist=new Map([[key(tr,tc),0]]),pq=[[0,tr,tc]];
-  while(pq.length){
-    pq.sort((a,b)=>a[0]-b[0]);
-    const[d,r,c]=pq.shift(); if(d>(dist.get(key(r,c))??Infinity))continue;
-    for(const[dr,dc]of DIRS){
-      const nr=r+dr,nc=c+dc; if(!inb(nr,nc))continue;
-      const cc=cost[tile(nr,nc)]; if(cc==null)continue;
-      const nd=d+cc;
-      if(nd<(dist.get(key(nr,nc))??Infinity)){dist.set(key(nr,nc),nd);pq.push([nd,nr,nc]);}
-    }
-  }
-  return dist;
-}
+const costField=(tr,tc,cls)=>M.costField(MAP,tr,tc,cls);
 async function aiTurn(){
   if(S.over)return;
   aiBuy(aiRng);
