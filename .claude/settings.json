@@ -1,0 +1,23 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/run-tests.sh\"",
+            "timeout": 120,
+            "statusMessage": "Running tests…"
+          },
+          {
+            "type": "agent",
+            "prompt": "You are the documentation consistency checker for this project. The living documentation is the in-game Codex: the hand-written French prose inside src/render/codex.js (rules text: terrain table `terr`, movement costs per class, damage formula and its percentages — 60%, +5%, +15%, 5 points minimum, 100 points = 10 PV —, capture/requisition rules, faction doctrines, the battlefield symmetry promise). Values rendered dynamically are NOT documentation and must be ignored entirely: the order of battle built from config.U and config.ROSTER (stats réq/mvt/portée/anti-inf/anti-bld), the displayed SEED, and anything interpolated from imports. Run: git diff HEAD -- src/config.js src/rules/ src/render/codex.js. If nothing relevant changed, or if the Codex prose still describes the rules faithfully, reply exactly: accept. Otherwise reply: block, then list each stale passage — quote it, give its location in src/render/codex.js, and state the correction the code now requires. Do not rewrite the documentation yourself and do not report style issues.",
+            "model": "claude-sonnet-4-6",
+            "timeout": 120,
+            "statusMessage": "Checking Codex sync…"
+          }
+        ]
+      }
+    ]
+  }
+}
