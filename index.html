@@ -184,10 +184,14 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
 .sh[disabled]{opacity:.3}
 
 /* ---------- bannière & overlays ---------- */
-#banner{position:absolute;left:0;right:0;top:38%;pointer-events:none;text-align:center;opacity:0}
+#banner{position:absolute;left:0;right:0;top:38%;pointer-events:none;text-align:center;opacity:0;z-index:15}
 #banner .bar{background:linear-gradient(90deg,transparent,#000c 12%,#000e 88%,transparent);padding:14px 0;
   border-top:1px solid #ffffff20;border-bottom:1px solid #ffffff20}
 #banner span{font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.3em;font-size:26px}
+#banner.sm .bar{border-color:#3f7bd866}
+#banner.sm span{color:var(--sm2);text-shadow:0 0 12px #3f7bd880}
+#banner.ork .bar{border-color:#8aae2b66}
+#banner.ork span{color:var(--ork2);text-shadow:0 0 12px #8aae2b80}
 #banner.show{animation:sweep 1.15s ease-out}
 @keyframes sweep{0%{opacity:0;transform:translateX(-30%)}25%{opacity:1;transform:none}75%{opacity:1}100%{opacity:0;transform:translateX(25%)}}
 #modal{position:fixed;inset:0;background:#0a0e12f7;display:none;flex-direction:column;z-index:50}

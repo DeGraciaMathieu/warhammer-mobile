@@ -134,6 +134,8 @@ export function renderOv(){
 
 export function banner(t){
   const b=$('banner');b.querySelector('span').textContent=t;
+  b.classList.toggle('sm',S.side==='sm');
+  b.classList.toggle('ork',S.side==='ork');
   b.classList.remove('show');void b.offsetWidth;b.classList.add('show');
 }
 export function floatFX(r,c,txt,cls){
