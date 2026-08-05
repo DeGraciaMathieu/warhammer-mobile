@@ -146,160 +146,9 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
 .who{width:21px;height:21px;border-radius:2px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
 .who svg{width:70%;height:70%;fill:none;stroke:#fff;color:#fff;stroke-width:2;overflow:visible}
 .who svg .f{fill:currentColor;stroke:none}
-.who.sm{background:linear-gradient(158deg,#4d89e6,#16305f)}
-.who.ork{background:linear-gradient(158deg,#9ac034,#33490d)}
-.cs{font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:10px;
-  color:var(--gold);opacity:.85;margin:9px 0 3px}
-.cs:first-child{margin-top:0}
-.crow{display:flex;align-items:baseline;gap:10px;font-size:12px;line-height:1.3;padding:2px 0}
-.crow .l{flex:1;opacity:.72}
-.crow .l small{opacity:.6;display:block;font-size:10.5px}
-.crow .v{font-family:Oswald,sans-serif;font-variant-numeric:tabular-nums;color:#ece0bb;font-size:13px}
-.crow.neg .v{color:#ffa285}
-.crow.pos .v{color:#c3e874}
-.ctot{display:flex;align-items:center;gap:10px;margin-top:6px;padding-top:6px;border-top:1px solid #ffffff1f}
-.ctot .l{flex:1;font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:11px;opacity:.7}
-.ctot .big{font-family:Oswald,sans-serif;font-size:23px;color:#ffd27a;line-height:1;font-variant-numeric:tabular-nums}
-.ctot .pv{font-size:12px;opacity:.75;font-variant-numeric:tabular-nums}
-.pips{display:flex;gap:2px;margin-top:7px}
-.pip{flex:1;height:10px;border-radius:1px;background:#ffffff10;box-shadow:inset 0 0 0 1px #00000059}
-.pip.sm{background:linear-gradient(#5f97ea,#20488c)}
-.pip.ork{background:linear-gradient(#a3c93c,#3f5a12)}
-.pip.lost{background:repeating-linear-gradient(45deg,#c9432f 0 3px,#6f1d13 3px 6px)}
-.plabel{font-size:11.5px;opacity:.7;margin-top:4px;font-variant-numeric:tabular-nums}
-.plabel b{opacity:1}
-.cnote{font-size:11.5px;opacity:.6;padding:3px 0}
-
-/* dégâts flottants */
-.fx{position:absolute;z-index:9;text-align:center;pointer-events:none;
-  font-family:Oswald,sans-serif;font-size:15px;color:#ffb9a2;
-  text-shadow:0 1px 0 #000,0 0 8px #000;animation:fxup .95s ease-out forwards}
-.fx.kill{color:#ff6a45;font-size:12px;letter-spacing:.12em}
-@keyframes fxup{0%{opacity:0;transform:translateY(4px)}
-  15%{opacity:1}70%{opacity:1;transform:translateY(-16px)}100%{opacity:0;transform:translateY(-24px)}}
-#shop{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
-.sh{flex:0 0 auto;width:76px;padding:6px 4px;border:1px solid var(--steel);border-radius:3px;background:#161c22;text-align:center}
-.sh svg{width:24px;height:24px;fill:none;stroke:#cfe0f5;color:#cfe0f5;stroke-width:1.9;overflow:visible}
-.sh svg .f{fill:currentColor;stroke:none}
-.sh .n{font-size:10px;line-height:1.1;margin-top:2px;opacity:.85}
-.sh .c{font-family:Oswald,sans-serif;color:var(--gold);font-size:13px}
-.sh[disabled]{opacity:.3}
-
-/* ---------- bannière & overlays ---------- */
-#banner{position:absolute;left:0;right:0;top:38%;pointer-events:none;text-align:center;opacity:0}
-#banner .bar{background:linear-gradient(90deg,transparent,#000c 12%,#000e 88%,transparent);padding:14px 0;
-  border-top:1px solid #ffffff20;border-bottom:1px solid #ffffff20}
-#banner span{font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.3em;font-size:26px}
-#banner.show{animation:sweep 1.15s ease-out}
-@keyframes sweep{0%{opacity:0;transform:translateX(-30%)}25%{opacity:1;transform:none}75%{opacity:1}100%{opacity:0;transform:translateX(25%)}}
-#modal{position:fixed;inset:0;background:#0a0e12f7;display:none;flex-direction:column;z-index:50}
-#modal.show{display:flex}
-#modalScroll{flex:1;overflow:auto;padding:20px 16px 16px;-webkit-overflow-scrolling:touch}
-#modalFoot{padding:10px 16px calc(10px + env(safe-area-inset-bottom));border-top:1px solid #ffffff1a;
-  background:linear-gradient(#161d24,#0d1216);box-shadow:0 -10px 24px #0009}
-#modalFoot .btn{width:100%;padding:14px 6px;font-size:14px}
-#modalTitle{font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:24px;
-  margin:3px 0 0;line-height:1.05}
-#modal p,#modal li{font-size:13.5px;line-height:1.45;opacity:.85;margin:4px 0}
-#modal ul{padding-left:17px;margin:5px 0}
-#modal li{margin:5px 0}
-.lead{font-size:14px;opacity:.6 !important;margin:9px 0 15px !important}
-.hint{font-size:12px;opacity:.4 !important;margin:12px 0 2px !important}
-
-.key{border:1px solid #33404a;border-left:3px solid var(--gold);border-radius:3px;background:#0e141a;padding:11px 12px}
-.kl{display:flex;gap:10px;padding:4px 0;font-size:13.5px;line-height:1.4}
-.kt{font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:10px;
-  color:var(--gold);min-width:64px;flex:0 0 auto;padding-top:3px;opacity:.9}
-
-.acc{border-top:1px solid #ffffff14}
-.acc:last-of-type{border-bottom:1px solid #ffffff14}
-.acc summary{list-style:none;display:flex;align-items:center;padding:13px 2px;cursor:pointer;
-  font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:12.5px}
-.acc summary::-webkit-details-marker{display:none}
-.acc summary::after{content:"+";margin-left:auto;font-size:17px;line-height:1;color:var(--gold);opacity:.75}
-.acc[open] summary{color:var(--gold)}
-.acc[open] summary::after{content:"–"}
-.accb{padding:0 2px 15px}
-.formula{font-family:Oswald,sans-serif;letter-spacing:.03em;color:#ffd27a;font-size:12.5px;line-height:1.5;
-  border-left:2px solid #ffd27a4d;padding:5px 0 5px 10px;margin:9px 0}
-
-.trow{display:flex;align-items:baseline;gap:9px;padding:5px 0;border-bottom:1px solid #ffffff0d;font-size:12.5px}
-.trow .tn{width:74px;flex:0 0 auto;opacity:.9}
-.trow .tv{width:40px;flex:0 0 auto;font-family:Oswald,sans-serif;color:#ffe9a8;font-variant-numeric:tabular-nums}
-.trow .tc{flex:1;opacity:.5;font-size:11.5px;line-height:1.3}
-
-.rowu{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #ffffff0f;align-items:flex-start}
-.rowu .ic{width:32px;height:32px;border-radius:2px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
-.rowu .ic svg{width:66%;height:66%;fill:none;stroke:#fff;color:#fff;stroke-width:1.9;overflow:visible}
-.rowu .ic svg .f{fill:currentColor;stroke:none}
-.rowu .ic.sm{background:linear-gradient(158deg,#4d89e6,#16305f)}
-.rowu .ic.ork{background:linear-gradient(158deg,#9ac034,#33490d);
-  clip-path:polygon(0 15%,15% 0,100% 0,100% 85%,85% 100%,0 100%);stroke-linecap:round}
-.rowu .rtxt{flex:1;min-width:0}
-.rn{font-family:Oswald,sans-serif;font-size:13.5px;letter-spacing:.03em}
-.rnote{font-size:11.5px;opacity:.5;line-height:1.35;margin:1px 0 5px}
-.rstat{display:flex;flex-wrap:wrap;gap:4px}
-.rstat span{font-size:10.5px;padding:1px 5px;border:1px solid #2f3941;border-radius:2px;
-  background:#0e1319;font-variant-numeric:tabular-nums}
-.rstat u{text-decoration:none;opacity:.45;letter-spacing:.06em;margin-right:4px}
-.rstat b{font-family:Oswald,sans-serif;color:#ffe9a8;font-weight:400}
-.seedbox{display:flex;gap:6px;margin:9px 0}
-.kicker{font-size:11px;letter-spacing:.22em;opacity:.5;text-transform:uppercase;font-family:Oswald,sans-serif}
-#modal input{flex:1;min-width:0;background:#0d1218;border:1px solid var(--steel);border-radius:3px;
-  color:var(--bone);padding:10px;font-family:Oswald,sans-serif;font-size:14px;letter-spacing:.06em}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-</style>
-</head>
-<body>
-
-<div id="top">
-  <div id="faction">
-    <span id="fdot"></span>
-    <div style="min-width:0">
-      <div id="fname" class="stencil">Adeptus Astartes</div>
-      <div id="tsub" class="stencil">Cycle 1 — phase de commandement</div>
-    </div>
-  </div>
-  <div class="pill" title="Réquisition">⚙ <b id="req">5</b></div>
-  <button class="iconbtn" id="btnDanger" title="Zone de menace">☠</button>
-  <button class="iconbtn" id="btnSound" title="Son">♪</button>
-  <button class="iconbtn" id="btnHelp" title="Codex">?</button>
-</div>
-
-<div id="wrap">
-  <div id="board"><div class="grid"></div></div>
-  <div id="banner"><div class="bar"><span></span></div></div>
-  <div id="combat"></div>
-</div>
-
-<div id="bot">
-  <div id="msg">Touche une unité pour la déployer sur le champ de bataille.</div>
-  <div id="card" style="display:none">
-    <div class="por"></div>
-    <div style="flex:1;min-width:0">
-      <div id="nm" class="stencil"></div>
-      <div id="stats"></div>
-    </div>
-  </div>
-  <div id="preview" style="display:none"></div>
-  <div id="shop" style="display:none"></div>
-  <div id="acts"></div>
-</div>
-
-<div id="modal">
-  <div id="modalScroll">
-    <div class="kicker" id="modalKicker">Codex de campagne</div>
-    <h1 id="modalTitle">Zone de guerre</h1>
-    <div id="modalBody"></div>
-  </div>
-  <div id="modalFoot"><button class="btn go" id="btnClose">Engager la bataille</button></div>
-</div>
-
-<script type="module">
+    // ... 906 lines omitted
 import {ROWS,COLS,TNAME,TDEF,U,ROSTER,FNAME,
-        UNIT_MAX_HP,HP_PER_BAR,BARS_MAX,CODEX_FLOOR,DEF_POINT_PCT,CAPTURE_GAUGE,
-        START_REQUISITION,AI,T,MIN_TILE,BOARD_MARGIN,
-        AUDIO,VIB} from './src/config.js';
+    // ... 905 lines omitted
 import {mulberry32,randomSeed} from './src/rng.js';
 import * as G from './src/rules/grid.js';
 import * as C from './src/rules/combat.js';
@@ -308,747 +157,212 @@ import {generateMap,initialPlacements} from './src/rules/mapgen.js';
 import {turnIncome,healedHp,captureProgress,winnerOf} from './src/rules/turn.js';
 import * as D from './src/rules/deploy.js';
 import {chooseBuy,bestAttack,advanceObjective,bestAdvanceSpot} from './src/rules/ai.js';
-/* ============================================================ DONNÉES */
-let MAP=[], SEED=0;
-
+    // ... 897 lines omitted
 function genMap(seed){SEED=seed>>>0;MAP=generateMap(SEED).map;}
-
-/* symboles tactiques : croix = infanterie, arc + point = tir indirect,
-   caisson sur pattes = marcheur, ovale = blindé, oblique = rapide */
-const I={
- tac:'<path d="M4.5 6 19.5 18M19.5 6 4.5 18"/>',
- asl:'<path d="M5.5 9.5 18.5 19M18.5 9.5 5.5 19"/><path d="M3.5 7q8.5-5.5 17 0"/>',
- dev:'<path d="M2.5 14.5Q12 1.5 21.5 14.5"/><circle class="f" cx="12" cy="16.5" r="3.5"/>',
- dre:'<path d="M6.5 4.5h11v8.5h-11z"/><path d="M9.5 13 5.5 21M14.5 13l4 8"/>',
- pre:'<ellipse cx="12" cy="12" rx="9" ry="5.6"/><path d="M3.4 12h17.2"/>',
- spe:'<ellipse cx="12" cy="12" rx="9" ry="5.6"/><path d="M3.5 19 20.5 5"/>',
- boy:'<path d="M5 6.5 19 17.5M19 6.5 5 17.5"/><path d="M8 21h8"/>',
- nob:'<path d="M5 5.5 19 16.5M19 5.5 5 16.5"/><path d="M3.5 20.5h17"/>',
- loo:'<path d="M2.5 14.5Q12 1.5 21.5 14.5"/><circle class="f" cx="12" cy="16.5" r="3.5"/>',
- ddr:'<path d="M6.5 4.5h11v8.5h-11z"/><path d="M9.5 13 5.5 21M14.5 13l4 8"/><path d="M17.5 4 21.5 6.5"/>',
- bug:'<ellipse cx="12" cy="12" rx="9" ry="5.6"/><path d="M3.5 19 20.5 5"/>',
- bat:'<ellipse cx="12" cy="12" rx="9" ry="5.6"/><path d="M3.4 12h17.2"/><path d="M12 6.6v10.8"/>'
-};
-const svg=t=>'<svg viewBox="0 0 24 24">'+I[t]+'</svg>';
-
-/* ============================================================ ÉTAT */
-let S=null, TS=44, uid=1;
-/* RNG des décisions IA : seedé au hasard à chaque session (comportement d'origine),
-   injectable avec une graine fixe dans les tests */
-const aiRng=mulberry32(randomSeed());
-const board=document.getElementById('board');
-const $=id=>document.getElementById(id);
-const key=G.key, inb=G.inb;
-const tile=(r,c)=>MAP[r][c];
-const bars=C.bars;
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-const unitAt=(r,c)=>G.unitAt(S.units,r,c);
-const bldAt=(r,c)=>G.bldAt(S.blds,r,c);
-
+    // ... 896 lines omitted
 function newGame(seed){
-  genMap(seed===undefined?randomSeed():seed);
-  S={turn:1,side:'sm',req:{sm:START_REQUISITION,ork:START_REQUISITION},units:[],blds:[],sel:null,phase:'idle',
-     from:null,targets:[],pending:null,danger:false,over:false};
-  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
-    const t=tile(r,c);
-    if(t==='B') S.blds.push({r,c,kind:'bastion',own:null,cap:CAPTURE_GAUGE});
-    if(t==='H') S.blds.push({r,c,kind:'hq',own:'sm',cap:CAPTURE_GAUGE});
-    if(t==='O') S.blds.push({r,c,kind:'hq',own:'ork',cap:CAPTURE_GAUGE});
+    // ... 895 lines omitted
   }
-  const add=(t,r,c)=>S.units.push({id:uid++,t,s:U[t].s,r,c,hp:UNIT_MAX_HP,acted:false});
-  initialPlacements(MAP).forEach(p=>add(p.t,p.r,p.c));
-  S.hq={sm:S.blds.find(b=>b.kind==='hq'&&b.own==='sm'),
-        ork:S.blds.find(b=>b.kind==='hq'&&b.own==='ork')};
-  buildTiles(); layout(); render();
-  banner("Cycle 1 — Astartes");
+    // ... 894 lines omitted
 }
 function regenNew(){closeModal();newGame();}
 function regenSeed(){
-  const v=parseInt(($('seedin')||{}).value,10);
-  if(!isNaN(v)){closeModal();newGame(v>>>0);}
+    // ... 891 lines omitted
 }
-/* appelées par les onclick inline de la modale Codex — un module n'expose rien en global */
-window.regenNew=regenNew; window.regenSeed=regenSeed;
-
-/* ============================================================ RENDU PLATEAU */
-const TBG={'.':'#2e363d','r':'#2e363d','f':'#26332b','u':'#333b42','c':'#252c32','#':'#161d22','B':'#303840','H':'#303840','O':'#303840'};
-const BRACKETS='<g fill="none" stroke="#d0a63a" stroke-width="1.6" opacity=".75"><path d="M3 8V3h5"/><path d="M32 3h5v5"/><path d="M37 32v5h-5"/><path d="M8 37H3v-5"/></g>';
-const wrapSVG=i=>'<svg viewBox="0 0 40 40" preserveAspectRatio="none">'+i+'</svg>';
-
+    // ... 890 lines omitted
 function terrainSVG(t,r,c){
-  switch(t){
-    case 'r':{
-      let d='';
-      const arms=[[-1,0,'M20 20V-1'],[1,0,'M20 20V41'],[0,-1,'M20 20H-1'],[0,1,'M20 20H41']];
-      arms.forEach(([dr,dc,p])=>{const nr=r+dr,nc=c+dc;
-        if(inb(nr,nc)&&'rHO'.indexOf(tile(nr,nc))>=0) d+=p;});
-      if(!d) d='M20 20h.01';
-      return wrapSVG(
-        `<path d="${d}" fill="none" stroke="#464f57" stroke-width="16"/>`+
-        `<path d="${d}" fill="none" stroke="#5b6570" stroke-width="13"/>`+
-        `<path d="${d}" fill="none" stroke="#0000002e" stroke-width="1.6" stroke-dasharray="3 4"/>`);
+    // ... 889 lines omitted
     }
-    case 'f': return wrapSVG(
-      '<g fill="#2b4a34"><circle cx="11" cy="14" r="7"/><circle cx="27" cy="11" r="6"/><circle cx="20" cy="27" r="7.5"/><circle cx="32" cy="28" r="5.5"/></g>'+
-      '<g fill="#3a6544"><circle cx="10" cy="12.5" r="4.4"/><circle cx="26" cy="9.5" r="3.6"/><circle cx="19" cy="25.5" r="4.6"/><circle cx="31" cy="27" r="3"/></g>');
-    case 'u': return wrapSVG(
-      '<g fill="#454f58" stroke="#10161b" stroke-width="1"><path d="M5.5 22.5h12v14h-12z"/><path d="M20.5 10.5h8v26h-8z"/><path d="M30.5 25.5h6v11h-6z"/></g>'+
-      '<g fill="#5d6871"><path d="M5.5 22.5h12v2.6h-12z"/><path d="M20.5 10.5h8v2.6h-8z"/><path d="M30.5 25.5h6v2.6h-6z"/></g>');
-    case 'c': return wrapSVG(
-      '<ellipse cx="20" cy="21" rx="14" ry="11" fill="#1d242a"/>'+
-      '<ellipse cx="20" cy="20" rx="9" ry="6.5" fill="#141a1f"/>'+
-      '<ellipse cx="20" cy="21" rx="14" ry="11" fill="none" stroke="#4c565f" stroke-width="1.1" stroke-dasharray="4 3"/>');
-    case '#': return wrapSVG(
-      '<path d="M2 38 11 9l10 8 8-10 7 31z" fill="#222a31"/>'+
-      '<path d="M11 9l10 8-5 6z" fill="#37424b"/>'+
-      '<g stroke="#0c1216" stroke-width="1" opacity=".55"><path d="M5 31h30M8 23h24M12 15h16"/></g>');
-    case 'B': return wrapSVG(
-      '<rect x="8" y="11" width="24" height="22" fill="#3b444d" stroke="#0e1418"/>'+
-      '<rect x="8" y="11" width="24" height="4.5" fill="#525d67"/>'+
-      '<g fill="#1a2127"><rect x="13" y="20" width="5.5" height="13"/><rect x="22" y="20" width="5.5" height="8"/></g>'+BRACKETS);
-    case 'H': case 'O': return wrapSVG(
-      '<rect x="5" y="7" width="30" height="27" fill="#414b55" stroke="#0e1418"/>'+
-      '<rect x="8.5" y="10.5" width="23" height="20" fill="none" stroke="#5f6b76"/>'+
-      '<path d="M20 13.5l6.5 8h-3.8v6h-5.4v-6h-3.8z" fill="#ccd6df"/>'+BRACKETS);
-    default: return wrapSVG(
-      '<g stroke="#ffffff0f" stroke-width="1" fill="none"><path d="M6 28q6-3.5 11 0"/><path d="M24 11q5-2 9 1"/></g>'+
-      '<g fill="#ffffff0d"><circle cx="31" cy="31" r="1.3"/><circle cx="12" cy="15" r="1"/><circle cx="25" cy="24" r="1"/></g>');
+    // ... 888 lines omitted
   }
 }
 function buildTiles(){
-  board.querySelectorAll('.t,.u,.ov').forEach(e=>e.remove());
-  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
-    const t=tile(r,c), d=document.createElement('div');
-    d.className='t'; d.dataset.k=key(r,c);
-    d.style.background=TBG[t]||'#2e363d';
-    d.innerHTML=terrainSVG(t,r,c);
-    board.appendChild(d);
+    // ... 885 lines omitted
   }
 }
 function layout(){
-  const w=$('wrap');
-  TS=Math.max(MIN_TILE,Math.floor(Math.min((w.clientWidth-BOARD_MARGIN)/COLS,(w.clientHeight-BOARD_MARGIN)/ROWS)));
-  document.documentElement.style.setProperty('--ts',TS+'px');
-  board.style.width=TS*COLS+'px'; board.style.height=TS*ROWS+'px';
-  board.querySelectorAll('.t').forEach(d=>{
-    const k=+d.dataset.k, r=(k/COLS)|0, c=k%COLS;
-    d.style.cssText+=`;left:${c*TS}px;top:${r*TS}px;width:${TS}px;height:${TS}px`;
-  });
-  render();
+    // ... 882 lines omitted
 }
-addEventListener('resize',layout);
-
+    // ... 881 lines omitted
 function render(){renderBlds();renderUnits();renderOv();renderHud();}
-
+    // ... 880 lines omitted
 function renderBlds(){
-  S.blds.forEach(b=>{
-    const el=board.querySelector('.t[data-k="'+key(b.r,b.c)+'"]');
-    el.querySelectorAll('.b-owner,.b-cap').forEach(e=>e.remove());
-    const o=document.createElement('div'); o.className='b-owner';
-    o.style.background=b.own==='sm'?'var(--sm)':b.own==='ork'?'var(--ork)':'#6a6357';
-    el.appendChild(o);
-    if(b.cap<CAPTURE_GAUGE){const c=document.createElement('div');c.className='b-cap';c.textContent=b.cap;el.appendChild(c);}
-  });
+    // ... 879 lines omitted
 }
 function renderUnits(){
-  const seen=new Set();
-  S.units.filter(u=>u.hp>0).forEach(u=>{
-    seen.add(u.id);
-    let el=board.querySelector('.u[data-id="'+u.id+'"]');
-    if(!el){
-      el=document.createElement('div'); el.className='u'; el.dataset.id=u.id;
-      el.innerHTML='<div class="box">'+svg(u.t)+'<div class="gauge"><i></i></div></div>';
-      board.appendChild(el);
+    // ... 877 lines omitted
     }
-    el.style.width=TS+'px'; el.style.height=TS+'px';
-    el.style.setProperty('--x',u.c*TS+'px'); el.style.setProperty('--y',u.r*TS+'px');
-    el.style.transform=`translate(${u.c*TS}px,${u.r*TS}px)`;
-    el.className='u '+u.s+(u.acted?' done':'')+(S.sel===u?' sel':'');
-    const box=el.firstChild;
-    box.querySelectorAll('.hp,.cap').forEach(e=>e.remove());
-    const g=box.querySelector('.gauge i');
-    if(g){g.style.width=Math.max(4,u.hp)+'%';g.className=bars(u)<=3?'low':'';}
-    if(bars(u)<BARS_MAX){const h=document.createElement('div');h.className='hp'+(bars(u)<=3?' low':'');h.textContent=bars(u);box.appendChild(h);}
-    if(u.capturing){const cc=document.createElement('div');cc.className='cap';cc.textContent='⚑';box.appendChild(cc);}
-  });
-  board.querySelectorAll('.u').forEach(el=>{ if(!seen.has(+el.dataset.id)) el.remove(); });
+    // ... 876 lines omitted
 }
-const TG_SVG='<svg viewBox="0 0 40 40"><g fill="none" stroke="#ff6f45" stroke-width="3.4" stroke-linecap="square">'+
-  '<path d="M2.5 12v-9.5h9.5"/><path d="M28 2.5h9.5V12"/><path d="M37.5 28v9.5H28"/><path d="M12 37.5H2.5V28"/></g></svg>';
+    // ... 875 lines omitted
 function ov(r,c,cls){
-  const d=document.createElement('div'); d.className='ov '+cls;
-  d.style.cssText=`left:${c*TS}px;top:${r*TS}px;width:${TS}px;height:${TS}px`;
-  if(cls==='tg') d.innerHTML=TG_SVG;
-  board.appendChild(d);
+    // ... 874 lines omitted
 }
 function renderOv(){
-  board.querySelectorAll('.ov').forEach(e=>e.remove());
-  if(S.danger){
-    const z=threatZone(S.side==='sm'?'ork':'sm');
-    z.forEach(k=>ov((k/COLS)|0,k%COLS,'dz'));
+    // ... 872 lines omitted
   }
-  if(S.phase==='sel'&&S.sel){
-    S.reach.forEach((_,k)=>{ if(canStop(S.sel,(k/COLS)|0,k%COLS)) ov((k/COLS)|0,k%COLS,'mv'); });
-    atkFootprint(S.sel).forEach(k=>{ if(!S.reach.has(k)) ov((k/COLS)|0,k%COLS,'at'); });
+    // ... 871 lines omitted
   }
-  if(S.phase==='moved'||S.phase==='target'||S.phase==='preview'){
-    S.targets.forEach(e=>ov(e.r,e.c,'tg'));
+    // ... 870 lines omitted
   }
 }
-
-/* ============================================================ RÈGLES */
-const reachable=u=>M.reachable(S.units,MAP,u);
-const canStop=(u,r,c)=>G.canStop(S.units,u,r,c);
-const pathTo=(u,r,c)=>M.pathTo(S.prev,u,r,c);
-const atkFootprint=u=>M.atkFootprint(S.units,S.reach,u);
-const targetsFrom=(u,r,c)=>C.targetsFrom(S.units,u,r,c);
-const dmgDetail=(a,d,ar,ac)=>C.dmgDetail(S.units,MAP,a,d,ar,ac);
-const dmgCalc=(a,d,ar,ac)=>C.dmgCalc(S.units,MAP,a,d,ar,ac);
-const counterOf=(a,d,ar,ac)=>C.counterOf(S.units,MAP,a,d,ar,ac);
-const threatZone=side=>M.threatZone(S.units,MAP,side);
-
-/* ============================================================ ACTIONS JOUEUR */
-board.addEventListener('click',e=>{
-  if(S.over||S.phase==='ai')return;
-  const rc=board.getBoundingClientRect();
-  const c=Math.floor((e.clientX-rc.left)/TS), r=Math.floor((e.clientY-rc.top)/TS);
-  if(inb(r,c)) onTap(r,c);
-});
-
+    // ... 868 lines omitted
 function onTap(r,c){
-  const u=unitAt(r,c), b=bldAt(r,c);
-  if(S.phase==='idle'){
-    if(u&&u.s===S.side&&!u.acted) return select(u);
-    if(u) return inspect(u);
-    if(b&&b.kind==='hq'&&b.own===S.side) return openShop();
-    return showTerrain(r,c);
+    // ... 867 lines omitted
   }
-  if(S.phase==='sel'){
-    if(u===S.sel) return deselect();
-    if(S.reach.has(key(r,c))&&canStop(S.sel,r,c)) return moveTo(r,c);
-    if(u&&u.s===S.side&&!u.acted) return select(u);
-    if(u) return inspect(u);
-    return deselect();
+    // ... 866 lines omitted
   }
-  if(S.phase==='moved'){
-    const t=S.targets.find(e=>e.r===r&&e.c===c);
-    if(t) return openPreview(t);
-    if(u===S.sel) return wait();                       // re-toucher l'unité = attendre
-    if(u&&u.s===S.side&&!u.acted){                     // enchaîner sur une autre unité
-      wait(); if(!S.over) select(u);
-      return;
+    // ... 865 lines omitted
     }
-    return;
+    // ... 864 lines omitted
   }
-  if(S.phase==='target'||S.phase==='preview'){
-    const t=S.targets.find(e=>e.r===r&&e.c===c);
-    if(t) return openPreview(t);
+    // ... 863 lines omitted
   }
 }
 function select(u){
-  S.sel=u; S.phase='sel';
-  const {dist,prev}=reachable(u); S.reach=dist; S.prev=prev;
-  S.from={r:u.r,c:u.c}; play(AUDIO.SELECT); render();
+    // ... 860 lines omitted
 }
 function deselect(){S.sel=null;S.phase='idle';S.targets=[];S.pending=null;render();}
 async function moveTo(r,c){
-  const u=S.sel, path=pathTo(u,r,c);
-  S.phase='anim'; render();
-  const el=board.querySelector('.u[data-id="'+u.id+'"]');
-  for(const k of path){
-    u.r=(k/COLS)|0; u.c=k%COLS;
-    el.style.transform=`translate(${u.c*TS}px,${u.r*TS}px)`;
-    play(AUDIO.STEP); await sleep(T.PLAYER_STEP);
+    // ... 857 lines omitted
   }
-  u.moved = (u.r!==S.from.r||u.c!==S.from.c);
-  if(u.moved){
-    u.capturing=false;
-    const old=bldAt(S.from.r,S.from.c);
-    if(old&&old.cap<CAPTURE_GAUGE&&!unitAt(old.r,old.c)) old.cap=CAPTURE_GAUGE;
+    // ... 856 lines omitted
   }
-  S.phase='moved'; S.targets=targetsFrom(u,u.r,u.c); render();
+    // ... 855 lines omitted
 }
 function undoMove(){
-  const u=S.sel; u.r=S.from.r; u.c=S.from.c; u.moved=false;
-  S.phase='sel'; S.targets=[]; render();
+    // ... 853 lines omitted
 }
 function openTarget(){S.phase='target';render();}
 function openPreview(t){
-  const u=S.sel;
-  const dtA=dmgDetail(u,t,u.r,u.c);
-  const hpAfter=Math.max(0,t.hp-dtA.dmg);
-  const dist=Math.abs(t.r-u.r)+Math.abs(t.c-u.c);
-  let ct=0,dtC=null,why='';
-  if(hpAfter===0) why="Cible détruite : aucune riposte.";
-  else if(U[t.t].rng[1]>1) why="Arme à tir indirect : cette unité ne riposte jamais.";
-  else if(dist!==1) why="Hors de portée de riposte (la cible frappe à 1 case).";
-  else {dtC=dmgDetail(t,u,t.r,t.c); ct=dtC.dmg;}
-  S.pending={t,dtA,dtC,ct,why,d:dtA.dmg,hpAfter,myAfter:Math.max(0,u.hp-ct)};
-  S.phase='preview'; render();
+    // ... 850 lines omitted
 }
 async function confirmAttack(){
-  const u=S.sel,p=S.pending,t=p.t;
-  const uName=U[u.t].n,tName=U[t.t].n,tB=bars(t),uB=bars(u);
-  S.phase='anim'; render();
-  await strike(u,t);
-  let ct=0;
-  if(t.hp>0){ct=counterOf(u,t,u.r,u.c); if(ct){await sleep(T.COUNTER_DELAY); await strike(t,u,ct);}}
-  finishUnit(u);
-  msg(`${uName} inflige <b>${p.dtA.dmg}</b> (${toPV(p.dtA.dmg)} PV) · ${tName} ${tB} → ${t.hp<=0?'<span class="dead">détruit</span>':bars(t)}`
-    +(ct?` — riposte <b>${ct}</b> · ${uName} ${uB} → ${u.hp<=0?'<span class="dead">détruit</span>':bars(u)}`:''));
+    // ... 848 lines omitted
 }
 function floatFX(r,c,txt,cls){
-  const d=document.createElement('div');
-  d.className='fx '+(cls||''); d.textContent=txt;
-  d.style.cssText=`left:${c*TS}px;top:${r*TS-6}px;width:${TS}px`;
-  board.appendChild(d); setTimeout(()=>d.remove(),T.FX_LIFETIME);
+    // ... 846 lines omitted
 }
 async function strike(a,d,forced){
-  const dmg=forced??dmgCalc(a,d,a.r,a.c);
-  const before=bars(d);
-  d.hp-=dmg; play(a.s==='sm'?AUDIO.HIT_SM:AUDIO.HIT_ORK); vib(VIB.HIT);
-  const el=board.querySelector('.u[data-id="'+d.id+'"]');
-  if(el){el.classList.add('hit');setTimeout(()=>el.classList.remove('hit'),T.HIT_ANIM);}
-  floatFX(d.r,d.c,'−'+(dmg/HP_PER_BAR).toFixed(1).replace('.',',')+' PV');
-  await sleep(T.STRIKE_PAUSE);
-  if(d.hp<=0){d.hp=0;killed(d);floatFX(d.r,d.c,'DÉTRUIT','kill');play(AUDIO.DESTROY);}
-  render();
+    // ... 844 lines omitted
 }
 function killed(d){
-  S.blds.forEach(b=>{if(b.r===d.r&&b.c===d.c&&b.cap<CAPTURE_GAUGE)b.cap=CAPTURE_GAUGE;});
-  render();
+    // ... 842 lines omitted
 }
 function capture(){
-  const u=S.sel,b=bldAt(u.r,u.c);
-  const res=captureProgress(b.cap,bars(u));
-  b.cap=res.cap; u.capturing=!res.captured; play(AUDIO.CAPTURE);
-  if(res.captured){
-    b.own=u.s;
-    msg(b.kind==='hq'?"Forteresse prise !":"Bastion sécurisé. +1 réquisition par cycle.");
+    // ... 840 lines omitted
   }
-  finishUnit(u);
+    // ... 839 lines omitted
 }
 function finishUnit(u){
-  u.acted=true; u.moved=false; S.sel=null; S.pending=null; S.targets=[];
-  S.phase = S.side==='sm' ? 'idle' : 'ai';
-  render();
-  if(checkEnd())return;
-  if(S.side!=='sm')return;
-  const left=S.units.filter(x=>x.hp>0&&x.s===S.side&&!x.acted).length;
-  if(left===0) msg("Toutes les unités ont agi. Termine le cycle.");
+    // ... 837 lines omitted
 }
 function wait(){finishUnit(S.sel);}
-
-/* déploiement */
+    // ... 835 lines omitted
 function openShop(){
-  const hq=S.blds.find(b=>b.kind==='hq'&&b.own===S.side);
-  if(!hq||unitAt(hq.r,hq.c)) {msg("La forteresse est occupée : impossible de déployer.");return;}
-  S.phase='shop'; render();
+    // ... 834 lines omitted
 }
 function buy(t){
-  const hq=S.blds.find(b=>b.kind==='hq'&&b.own===S.side);
-  if(U[t].cost>S.req[S.side])return;
-  S.req[S.side]-=U[t].cost;
-  S.units.push({id:uid++,t,s:S.side,r:hq.r,c:hq.c,hp:UNIT_MAX_HP,acted:true});
-  play(AUDIO.DEPLOY); S.phase='idle'; render();
-  msg(U[t].n+" déployé. Il entrera en action au prochain cycle.");
+    // ... 832 lines omitted
 }
-
-/* ============================================================ TOURS */
+    // ... 831 lines omitted
 function startTurn(side){
-  S.side=side;
-  if(side==='sm')S.turn++;
-  S.req[side]+=turnIncome(S.blds,side);
-  S.units.filter(u=>u.s===side&&u.hp>0).forEach(u=>{
-    u.acted=false;u.moved=false;
-    const b=bldAt(u.r,u.c);
-    if(b&&b.own===side)u.hp=healedHp(u.hp);
-  });
-  S.sel=null;S.phase=side==='sm'?'idle':'ai';S.targets=[];S.pending=null;
-  render();
-  banner((side==='sm'?"Astartes":"Waaagh!")+" — cycle "+S.turn);
-  msg(side==='sm'?"À toi de jouer.":"Les Orks avancent…");
+    // ... 830 lines omitted
 }
 function endTurn(){
-  if(S.over)return;
-  S.sel=null;S.phase='ai';S.targets=[];render();
-  startTurn('ork'); setTimeout(aiTurn,T.AI_TURN_START);
+    // ... 828 lines omitted
 }
 function checkEnd(){
-  const win=winnerOf(S.units,S.hq.sm,S.hq.ork);
-  if(win){S.over=true;S.phase='over';render();showEnd(win);return true;}
-  return false;
+    // ... 826 lines omitted
 }
-
-/* ============================================================ IA ORK */
-const costField=(tr,tc,cls)=>M.costField(MAP,tr,tc,cls);
+    // ... 825 lines omitted
 async function aiTurn(){
-  if(S.over)return;
-  aiBuy(aiRng);
-  await sleep(T.AI_OPENING);
-  const list=S.units.filter(u=>u.hp>0&&u.s==='ork').sort((a,b)=>U[b.t].rng[1]-U[a.t].rng[1]);
-  for(const u of list){
-    if(S.over)return;
-    if(u.hp<=0||u.acted)continue;
-    await aiAct(u);
-    if(checkEnd())return;
-    await sleep(T.AI_UNIT_PAUSE);
+    // ... 824 lines omitted
   }
-  await sleep(T.AI_CLOSING);
-  startTurn('sm');
+    // ... 823 lines omitted
 }
 function aiBuy(rng){
-  const hq=S.blds.find(b=>b.kind==='hq'&&b.own==='ork');
-  if(!hq||unitAt(hq.r,hq.c))return;
-  const pick=chooseBuy(S.req.ork,rng);
-  if(!pick)return;
-  S.req.ork-=U[pick].cost;
-  S.units.push({id:uid++,t:pick,s:'ork',r:hq.r,c:hq.c,hp:UNIT_MAX_HP,acted:true});
-  render();
+    // ... 821 lines omitted
 }
 async function aiAct(u){
-  const {dist,prev}=reachable(u); S.reach=dist; S.prev=prev; S.sel=u; S.from={r:u.r,c:u.c};
-  const spots=[...dist.keys()].filter(k=>canStop(u,(k/COLS)|0,k%COLS));
-  const best=bestAttack(S.units,MAP,u,dist);
-  if(best&&best.sc>AI.ATTACK_THRESHOLD){
-    await aiMove(u,best.r,best.c);
-    S.targets=[best.e]; S.pending={t:best.e};
-    const dt=dmgDetail(u,best.e,u.r,u.c), tB=bars(best.e), uB=bars(u);
-    await strike(u,best.e);
-    let ct=0;
-    if(best.e.hp>0){ct=counterOf(u,best.e,u.r,u.c);if(ct){await sleep(T.AI_COUNTER_DELAY);await strike(best.e,u,ct);}}
-    msg(`${U[u.t].n} inflige <b>${dt.dmg}</b> (${toPV(dt.dmg)} PV) · ${U[best.e.t].n} ${tB} → ${best.e.hp<=0?'<span class="dead">détruit</span>':bars(best.e)}`
-      +(ct?` — riposte <b>${ct}</b> · ${U[u.t].n} ${uB} → ${u.hp<=0?'<span class="dead">détruit</span>':bars(u)}`:''));
-    u.acted=true;u.moved=false;S.sel=null;S.targets=[];render();return;
+    // ... 819 lines omitted
   }
-  // capture
-  if(U[u.t].inf){
-    const here=bldAt(u.r,u.c);
-    if(here&&here.own!=='ork'){ S.sel=u; capture(); return; }
-    const objs=S.blds.filter(b=>b.own!=='ork'&&dist.has(key(b.r,b.c))&&canStop(u,b.r,b.c))
-                     .sort((a,b)=>(a.kind==='hq'?-1:1)-(b.kind==='hq'?-1:1));
-    if(objs.length){ await aiMove(u,objs[0].r,objs[0].c); S.sel=u; capture(); return; }
+    // ... 818 lines omitted
   }
-  // avance
-  const tgt=advanceObjective(S.units,S.blds,u);
-  if(tgt){
-    const field=costField(tgt.r,tgt.c,U[u.t].cls);
-    const bk=bestAdvanceSpot(MAP,field,spots);
-    if(bk!=null&&bk!==key(u.r,u.c)) await aiMove(u,(bk/COLS)|0,bk%COLS);
+    // ... 817 lines omitted
   }
-  u.acted=true;u.moved=false;S.sel=null;render();
+    // ... 816 lines omitted
 }
 async function aiMove(u,r,c){
-  const path=pathTo(u,r,c), el=board.querySelector('.u[data-id="'+u.id+'"]');
-  for(const k of path){
-    u.r=(k/COLS)|0;u.c=k%COLS;
-    if(el)el.style.transform=`translate(${u.c*TS}px,${u.r*TS}px)`;
-    await sleep(T.AI_STEP);
+    // ... 814 lines omitted
   }
-  u.moved=path.length>0; render();
+    // ... 813 lines omitted
 }
-
-/* ============================================================ HUD */
+    // ... 812 lines omitted
 function msg(t){$('msg').innerHTML=t;}
 function banner(t){
-  const b=$('banner');b.querySelector('span').textContent=t;
-  b.classList.remove('show');void b.offsetWidth;b.classList.add('show');
+    // ... 810 lines omitted
 }
 function stat(l,v){return `<span class="st"><u>${l}</u> <b>${v}</b></span>`;}
 function unitCard(u,foe){
-  const d=U[u.t];
-  $('card').style.display='flex';
-  const por=$('card').querySelector('.por');
-  por.className='por '+u.s; por.innerHTML=svg(u.t);
-  $('nm').textContent=d.n;
-  $('stats').innerHTML=
-    stat('PV',bars(u)+'/'+BARS_MAX)+stat('MVT',d.mv)+stat('PORTÉE',d.rng[1]>1?d.rng[0]+'-'+d.rng[1]:'1')+
-    stat('ANTI-INF',d.dmg.inf)+stat('ANTI-BLD',d.dmg.veh)+stat('BLINDAGE',d.armor==='veh'?'lourd':'léger')+
-    stat('TERRAIN','+'+(TDEF[tile(u.r,u.c)]+d.df)*DEF_POINT_PCT+'%');
+    // ... 807 lines omitted
 }
 function hideCard(){$('card').style.display='none';}
 function inspect(u){
-  S.sel=null;S.phase='idle';render();
-  unitCard(u,true);
-  msg(U[u.t].note+(u.s===S.side?"":" — unité ennemie."));
-  $('acts').innerHTML='';
-  addBtn('Menace de cette unité','ghost',()=>{S.danger=!S.danger;render();});
-  addBtn('Fermer','ghost',()=>{deselect();});
+    // ... 804 lines omitted
 }
 function showTerrain(r,c){
-  hideCard();
-  const t=tile(r,c),b=bldAt(r,c);
-  let s=`<b>${TNAME[t]}</b> — défense +${TDEF[t]*DEF_POINT_PCT}%`;
-  if(b) s+= b.own?` · contrôlé par ${b.own==='sm'?'les Astartes':'les Orks'}`:' · neutre';
-  msg(s); renderHud(true);
+    // ... 802 lines omitted
 }
 function addBtn(label,cls,fn,dis){
-  const b=document.createElement('button');
-  b.className='btn '+(cls||''); b.textContent=label; b.disabled=!!dis;
-  b.onclick=()=>{play(AUDIO.BUTTON);vib(VIB.BUTTON);fn();};
-  $('acts').appendChild(b);
+    // ... 800 lines omitted
 }
-/* ---- relevé de combat ---- */
-const fmtx=x=>x.toFixed(2).replace('.',',');
-const toPV=C.toPV;
-const chip=u=>`<span class="who ${u.s}">${svg(u.t)}</span>`;
+    // ... 799 lines omitted
 function crow(l,v,cls){return `<div class="crow ${cls||''}"><div class="l">${l}</div><div class="v">${v||''}</div></div>`;}
 function pipRow(u,after){
-  const cur=bars(u), aft=after<=0?0:Math.max(1,Math.ceil(after/HP_PER_BAR));
-  let h='<div class="pips">';
-  for(let i=1;i<=BARS_MAX;i++) h+=`<div class="pip ${i<=aft?u.s:(i<=cur?'lost':'')}"></div>`;
-  return h+`</div><div class="plabel">${U[u.t].n} · <b>${cur} → ${aft===0?'<span class="dead">détruit</span>':aft}</b> PV</div>`;
+    // ... 797 lines omitted
 }
 function calcBlock(a,d,dt,title){
-  let h=`<div class="cs">${title}</div>`;
-  h+=crow(`Puissance de feu<small>${U[a.t].n} contre blindage ${dt.armor==='veh'?'lourd':'léger'}</small>`,dt.base);
-  if(dt.sc!==1) h+=crow(
-      `Attaquant à ${Math.round(dt.raw*BARS_MAX)}/${BARS_MAX} PV`+(dt.codex?'<small>Discipline du Codex : plancher à '+fmtx(CODEX_FLOOR)+'</small>':''),
-      '×'+fmtx(dt.sc), dt.codex?'pos':'neg');
-  if(dt.orks) h+=crow(`Waaagh! · ${dt.orks} ork${dt.orks>1?'s':''} au contact`,'×'+fmtx(dt.mob),'pos');
-  if(dt.tdef) h+=crow(`Couvert · ${TNAME[tile(d.r,d.c)]}`,'−'+dt.tdef*DEF_POINT_PCT+'%','neg');
-  if(dt.udef) h+=crow('Blindage lourd de la cible','−'+dt.udef*DEF_POINT_PCT+'%','neg');
-  if(dt.tdef+dt.udef) h+=crow('Défense cumulée','×'+fmtx(dt.red),'neg');
-  if(dt.plancher) h+=crow('Plancher minimum de dégâts','= 5','pos');
-  return h+`<div class="ctot"><div class="l">Dégâts</div><div class="big">${dt.dmg}</div><div class="pv">soit ${toPV(dt.dmg)} PV</div></div>`;
+    // ... 795 lines omitted
 }
 function renderCombat(){
-  const p=S.pending,u=S.sel,c=$('combat');
-  let h=`<div class="ch">${chip(u)}<b>${U[u.t].n}</b><span class="arrow">▸</span>${chip(p.t)}<b>${U[p.t.t].n}</b></div>`;
-  h+=calcBlock(u,p.t,p.dtA,'Attaque')+pipRow(p.t,p.hpAfter);
-  h+= p.dtC ? calcBlock(p.t,u,p.dtC,'Riposte')+pipRow(u,p.myAfter)
-            : `<div class="cs">Riposte</div><div class="cnote">${p.why}</div>`;
-  c.innerHTML=h; c.classList.add('show');
+    // ... 793 lines omitted
 }
-
+    // ... 792 lines omitted
 function renderHud(keepMsg){
-  $('fname').textContent=FNAME[S.side];
-  $('tsub').textContent='Cycle '+S.turn+(S.phase==='ai'?' — riposte ennemie':' — phase de commandement');
-  $('fdot').style.color=S.side==='sm'?'var(--sm)':'var(--ork)';
-  $('req').textContent=S.req[S.side];
-  $('btnDanger').classList.toggle('on',S.danger);
-  $('preview').style.display='none'; $('shop').style.display='none';
-  $('combat').classList.remove('show');
-  const acts=$('acts'); acts.innerHTML='';
-
-  if(S.phase==='ai'||S.phase==='anim'||S.over){ if(S.phase==='ai')hideCard(); return; }
-
-  if(S.phase==='idle'){
-    hideCard();
-    const left=S.units.filter(u=>u.hp>0&&u.s===S.side&&!u.acted);
-    addBtn('Suivante ('+left.length+')','',()=>{cycleNext();},left.length===0);
-    addBtn('Déployer','',()=>openShop(),!canDeploy());
-    addBtn('Fin du cycle','go',()=>endTurn());
-    return;
+    // ... 791 lines omitted
   }
-  if(S.phase==='sel'){
-    unitCard(S.sel);
-    msg("Touche une case bleue pour te déplacer. Le rouge indique la portée de tir.");
-    addBtn('Annuler','ghost',()=>deselect());
-    return;
+    // ... 790 lines omitted
   }
-  if(S.phase==='moved'){
-    unitCard(S.sel);
-    const b=bldAt(S.sel.r,S.sel.c);
-    const canCap=U[S.sel.t].inf&&b&&b.own!==S.side;
-    addBtn('Attaquer','warn',()=>openTarget(),S.targets.length===0);
-    if(canCap) addBtn('Capturer','',()=>capture());
-    addBtn('Attendre','',()=>wait());
-    addBtn('↶','ghost',()=>undoMove());
-    if(S.targets.length===0&&U[S.sel.t].rng[1]>1&&S.sel.moved)
-      msg("Le tir indirect exige de rester immobile ce cycle. Touche une autre unité pour enchaîner.");
-    else if(S.targets.length===0) msg("Aucune cible à portée. Touche une autre unité pour enchaîner : celle-ci passe en attente.");
-    else msg("Touche un ennemi cerclé de rouge pour l'issue du combat, ou une autre unité pour enchaîner.");
-    return;
+    // ... 789 lines omitted
   }
-  if(S.phase==='target'){
-    unitCard(S.sel);
-    msg("Choisis une cible.");
-    addBtn('Retour','ghost',()=>{S.phase='moved';render();});
-    return;
+    // ... 788 lines omitted
   }
-  if(S.phase==='preview'){
-    unitCard(S.sel);
-    const p=S.pending,bar=$('preview');
-    renderCombat();
-    bar.style.display='flex';
-    bar.innerHTML=
-      `<div class="side">Cible · ${U[p.t.t].n}<br><span class="big ${p.hpAfter===0?'dead':''}">${bars(p.t)} → ${p.hpAfter===0?'détruite':Math.max(1,Math.ceil(p.hpAfter/HP_PER_BAR))}</span></div>`+
-      `<div class="side" style="text-align:right">Riposte subie<br><span class="big ${p.myAfter===0?'dead':''}">${bars(S.sel)} → ${p.ct===0?'aucune':(p.myAfter===0?'détruite':Math.max(1,Math.ceil(p.myAfter/HP_PER_BAR)))}</span></div>`;
-    msg("");
-    addBtn('Confirmer l\'attaque','warn',()=>confirmAttack());
-    addBtn('Autre cible','ghost',()=>{S.phase='target';render();});
-    addBtn('↶','ghost',()=>{S.phase='moved';S.pending=null;render();});
-    return;
+    // ... 787 lines omitted
   }
-  if(S.phase==='shop'){
-    hideCard();
-    const sh=$('shop'); sh.style.display='flex'; sh.innerHTML='';
-    ROSTER[S.side].forEach(t=>{
-      const b=document.createElement('button');
-      b.className='sh'; b.disabled=U[t].cost>S.req[S.side];
-      b.innerHTML=svg(t)+`<div class="n">${U[t].n}</div><div class="c">${U[t].cost}</div>`;
-      b.onclick=()=>{play(AUDIO.SHOP);buy(t);};
-      sh.appendChild(b);
-    });
-    msg("Réquisition disponible : <b>"+S.req[S.side]+"</b>. L'unité arrive à la forteresse.");
-    addBtn('Retour','ghost',()=>{S.phase='idle';render();});
+    // ... 786 lines omitted
   }
 }
-const canDeploy=()=>D.canDeploy(S.blds,S.units,S.req[S.side],S.side);
-let cyc=0;
+    // ... 784 lines omitted
 function cycleNext(){
-  const l=S.units.filter(u=>u.hp>0&&u.s===S.side&&!u.acted);
-  if(!l.length)return;
-  cyc=(cyc+1)%l.length; select(l[cyc]);
+    // ... 783 lines omitted
 }
-
-/* ============================================================ SON / VIBRATION */
-let AC=null, muted=false;
+    // ... 782 lines omitted
 function blip(f,d,type,vol){
-  if(muted)return;
-  try{
-    AC=AC||new (window.AudioContext||window.webkitAudioContext)();
-    const o=AC.createOscillator(),g=AC.createGain();
-    o.type=type||'square';o.frequency.value=f;g.gain.value=vol||.04;
-    o.connect(g);g.connect(AC.destination);o.start();
-    g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+(d||.08));
-    o.stop(AC.currentTime+(d||.08));
-  }catch(e){}
+    // ... 781 lines omitted
 }
 function vib(ms){if(navigator.vibrate&&!muted)navigator.vibrate(ms);}
-const play=s=>blip(s.f,s.d,s.type,s.vol);
-
-/* ============================================================ MODALE */
+    // ... 779 lines omitted
 function codex(){
-  const acc=(t,b,open)=>`<details class="acc"${open?' open':''}><summary>${t}</summary><div class="accb">${b}</div></details>`;
-  const terr=[
-    ['Forteresse','+20%',"Objectif de victoire. Point de déploiement."],
-    ['Ruines','+15%',"Le meilleur couvert. Marcheurs à l'aise, véhicules à la peine."],
-    ['Bastion','+15%',"Capturable. Rapporte 1 réquisition par cycle."],
-    ['Bois','+10%',"Très pénible pour les véhicules."],
-    ['Cratère','+5%',"Couvert léger, franchi facilement par les marcheurs."],
-    ['Route','aucun',"Progression rapide, aucune protection."],
-    ['Rocher','—',"Infranchissable."]
-  ];
-
-  let h=`<p class="lead">Duel tactique au tour par tour sur une planète-ruche. Deux armées, aucun dé.</p>
-  <div class="key">
-    <div class="kl"><span class="kt">But</span><span>Capturer la forteresse adverse, ou détruire son armée.</span></div>
-    <div class="kl"><span class="kt">Geste</span><span>Touche une unité, puis une case bleue, puis une action.</span></div>
-    <div class="kl"><span class="kt">Promesse</span><span>L'issue exacte du combat s'affiche avant que tu ne valides.</span></div>
-  </div>
-  <p class="hint">Le détail se déplie ci-dessous, section par section.</p>`;
-
-  h+=acc('Commandes',`<ul>
-    <li>Touche une unité : les cases <b style="color:#8fb8ff">bleues</b> sont accessibles,
-        les <b style="color:#ff9d78">hachures rouges</b> montrent la portée de tir.</li>
-    <li>Touche un ennemi encadré d'équerres pour ouvrir le relevé de combat, puis confirme.</li>
-    <li><b>↶</b> annule le déplacement tant que rien n'est validé.</li>
-    <li>Une fois déplacée, toucher une autre unité vaut <b>Attendre</b> : tu enchaînes d'un seul geste.</li>
-    <li><b>Suivante</b> saute à la prochaine unité inactive, avec son décompte.</li>
-    <li><b>☠</b> affiche tout ce que l'ennemi peut atteindre au prochain cycle.</li>
-    <li>Touche une case vide pour lire son terrain, un ennemi pour consulter sa fiche sans rien engager.</li>
-  </ul>`);
-
-  h+=acc('Terrain et déplacement',
-    terr.map(t=>`<div class="trow"><span class="tn">${t[0]}</span><span class="tv">${t[1]}</span><span class="tc">${t[2]}</span></div>`).join('')
-    +`<ul style="margin-top:9px">
-    <li><b>À pied</b> : ruines, bois et cratères coûtent 2 points de mouvement.</li>
-    <li><b>Marcheur</b> : ruines et cratères à 1, bois à 2. Le roi des décombres.</li>
-    <li><b>Véhicule</b> : bois et ruines à 3. À garder sur les routes et les plaines.</li>
-    <li><b>Antigrav</b> : tout à 1. Le terrain n'existe pas.</li>
-  </ul>`);
-
-  h+=acc('Calcul des dégâts',
-    `<p>Chaque coup suit cette formule, dépliée ligne par ligne dans le relevé avant validation :</p>
-    <div class="formula">puissance de feu × état de l'attaquant × doctrine × défense de la cible</div>
-    <ul>
-    <li><b>Puissance de feu</b> : valeur anti-infanterie ou anti-blindé de l'arme, selon la cible.</li>
-    <li><b>État</b> : une unité à 6 PV ne frappe qu'à 60% de sa valeur.</li>
-    <li><b>Défense</b> : 5% par point de couvert du terrain, plus 5% par point de blindage.</li>
-    <li>100 points de dégâts = 10 PV. Un coup inflige toujours au moins 5 points.</li>
-    <li>La <b>riposte</b> est automatique au contact, sauf si la cible tombe, tire à distance, ou est hors de portée.</li>
-  </ul>`);
-
-  h+=acc('Objectifs et réquisition',`<ul>
-    <li>Seule l'infanterie capture. Reste sur le bâtiment : la jauge descend de tes PV actuels par cycle.</li>
-    <li>Quitter le bâtiment ou tomber remet la jauge à zéro.</li>
-    <li>Chaque bâtiment tenu rapporte 1 réquisition par cycle, forteresse comprise.</li>
-    <li>Touche ta forteresse pour déployer. L'unité arrivée entre en action au cycle suivant.</li>
-    <li>Une unité posée sur un bâtiment allié récupère 2 PV par cycle.</li>
-  </ul>`);
-
-  h+=acc('Doctrines de faction',`<ul>
-    <li><b>Astartes — Discipline du Codex :</b> ne perdent jamais plus de 40% de puissance de feu, même à 1 PV.</li>
-    <li><b>Orks — Waaagh! :</b> +5% de dégâts par ork adjacent à l'attaquant, jusqu'à +15%.</li>
-    <li><b>Tir indirect</b> (portée 2-3) : ne subit jamais de riposte, mais interdit de bouger et tirer le même cycle.</li>
-  </ul>`);
-
-  let ro='';
-  ['sm','ork'].forEach(s=>{
-    ro+=`<div class="kicker" style="margin:${s==='sm'?'2px':'16px'} 0 4px">${FNAME[s]}</div>`;
-    ROSTER[s].forEach(t=>{const d=U[t];
-      ro+=`<div class="rowu"><div class="ic ${s}">${svg(t)}</div><div class="rtxt">
-        <div class="rn">${d.n}</div><div class="rnote">${d.note}</div>
-        <div class="rstat">
-          <span><u>réq</u><b>${d.cost}</b></span>
-          <span><u>mvt</u><b>${d.mv}</b></span>
-          <span><u>portée</u><b>${d.rng[1]>1?d.rng[0]+'-'+d.rng[1]:1}</b></span>
-          <span><u>anti-inf</u><b>${d.dmg.inf}</b></span>
-          <span><u>anti-bld</u><b>${d.dmg.veh}</b></span>
-        </div></div></div>`;
-    });
-  });
-  h+=acc('Ordre de bataille',ro);
-
-  h+=acc('Champ de bataille',
-    `<p>Chaque carte est générée puis pivotée de 180° : les deux camps héritent du même terrain,
-    du même nombre de bastions et du même dégagement.</p>
-    <p>Graine actuelle : <b style="font-family:Oswald,sans-serif;color:var(--gold);letter-spacing:.08em">${SEED}</b></p>
-    <div class="seedbox">
-      <input id="seedin" inputmode="numeric" placeholder="graine" value="${SEED}">
-      <button class="btn" onclick="regenSeed()">Rejouer</button>
-    </div>
-    <button class="btn" style="width:100%" onclick="regenNew()">Tirer une nouvelle carte</button>
-    <p class="hint">Régénérer recommence la bataille.</p>`);
-
-  return h;
+    // ... 778 lines omitted
 }
 function openCodex(first){
-  $('modalKicker').textContent=first?'Bataille tactique · Astartes contre Waaagh!':'Codex de campagne';
-  $('modalTitle').textContent='Zone de guerre';
-  $('modalBody').innerHTML=codex();
-  $('btnClose').textContent=first?'Engager la bataille':'Reprendre';
-  $('btnClose').onclick=closeModal;
-  $('modalScroll').scrollTop=0;
-  $('modal').classList.add('show');
+    // ... 776 lines omitted
 }
 function showEnd(win){
-  $('modalKicker').textContent='Fin de la bataille';
-  $('modalTitle').textContent = win==='sm'?"Victoire impériale":"Défaite";
-  $('modalBody').innerHTML=
-    (win==='sm'
-      ? `<p class="lead">L'Empereur protège. Les xenos sont brisés.</p>`
-      : `<p class="lead">WAAAGH ! Les Orks ont tout cassé. Encore.</p>`)
-    +`<div class="key">
-       <div class="kl"><span class="kt">Cycles</span><span>${S.turn}</span></div>
-       <div class="kl"><span class="kt">Graine</span><span>${SEED}</span></div>
-      </div>`;
-  $('modalScroll').scrollTop=0;
-  $('modal').classList.add('show');
-  $('btnClose').textContent='Nouvelle bataille';
-  $('btnClose').onclick=()=>{closeModal();newGame();openCodex(true);};
-  play(win==='sm'?AUDIO.VICTORY:AUDIO.DEFEAT);
+    // ... 774 lines omitted
 }
 function closeModal(){$('modal').classList.remove('show');}
-$('btnClose').onclick=closeModal;
-$('btnHelp').onclick=()=>openCodex(false);
-$('btnDanger').onclick=()=>{S.danger=!S.danger;render();msg(S.danger?"Zone de menace ennemie affichée.":"Zone de menace masquée.");};
-$('btnSound').onclick=()=>{muted=!muted;$('btnSound').textContent=muted?'✕':'♪';};
-
-newGame();
-openCodex(true);
-</script>
+// ... 772 more lines (total: 1054)<script type="module" src="./src/main.js"></script>
 </body>
 </html>
