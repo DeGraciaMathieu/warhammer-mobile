@@ -146,223 +146,155 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
 .who{width:21px;height:21px;border-radius:2px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
 .who svg{width:70%;height:70%;fill:none;stroke:#fff;color:#fff;stroke-width:2;overflow:visible}
 .who svg .f{fill:currentColor;stroke:none}
-    // ... 906 lines omitted
-import {ROWS,COLS,TNAME,TDEF,U,ROSTER,FNAME,
-    // ... 905 lines omitted
-import {mulberry32,randomSeed} from './src/rng.js';
-import * as G from './src/rules/grid.js';
-import * as C from './src/rules/combat.js';
-import * as M from './src/rules/movement.js';
-import {generateMap,initialPlacements} from './src/rules/mapgen.js';
-import {turnIncome,healedHp,captureProgress,winnerOf} from './src/rules/turn.js';
-import * as D from './src/rules/deploy.js';
-import {chooseBuy,bestAttack,advanceObjective,bestAdvanceSpot} from './src/rules/ai.js';
-    // ... 897 lines omitted
-function genMap(seed){SEED=seed>>>0;MAP=generateMap(SEED).map;}
-    // ... 896 lines omitted
-function newGame(seed){
-    // ... 895 lines omitted
-  }
-    // ... 894 lines omitted
-}
-function regenNew(){closeModal();newGame();}
-function regenSeed(){
-    // ... 891 lines omitted
-}
-    // ... 890 lines omitted
-function terrainSVG(t,r,c){
-    // ... 889 lines omitted
-    }
-    // ... 888 lines omitted
-  }
-}
-function buildTiles(){
-    // ... 885 lines omitted
-  }
-}
-function layout(){
-    // ... 882 lines omitted
-}
-    // ... 881 lines omitted
-function render(){renderBlds();renderUnits();renderOv();renderHud();}
-    // ... 880 lines omitted
-function renderBlds(){
-    // ... 879 lines omitted
-}
-function renderUnits(){
-    // ... 877 lines omitted
-    }
-    // ... 876 lines omitted
-}
-    // ... 875 lines omitted
-function ov(r,c,cls){
-    // ... 874 lines omitted
-}
-function renderOv(){
-    // ... 872 lines omitted
-  }
-    // ... 871 lines omitted
-  }
-    // ... 870 lines omitted
-  }
-}
-    // ... 868 lines omitted
-function onTap(r,c){
-    // ... 867 lines omitted
-  }
-    // ... 866 lines omitted
-  }
-    // ... 865 lines omitted
-    }
-    // ... 864 lines omitted
-  }
-    // ... 863 lines omitted
-  }
-}
-function select(u){
-    // ... 860 lines omitted
-}
-function deselect(){S.sel=null;S.phase='idle';S.targets=[];S.pending=null;render();}
-async function moveTo(r,c){
-    // ... 857 lines omitted
-  }
-    // ... 856 lines omitted
-  }
-    // ... 855 lines omitted
-}
-function undoMove(){
-    // ... 853 lines omitted
-}
-function openTarget(){S.phase='target';render();}
-function openPreview(t){
-    // ... 850 lines omitted
-}
-async function confirmAttack(){
-    // ... 848 lines omitted
-}
-function floatFX(r,c,txt,cls){
-    // ... 846 lines omitted
-}
-async function strike(a,d,forced){
-    // ... 844 lines omitted
-}
-function killed(d){
-    // ... 842 lines omitted
-}
-function capture(){
-    // ... 840 lines omitted
-  }
-    // ... 839 lines omitted
-}
-function finishUnit(u){
-    // ... 837 lines omitted
-}
-function wait(){finishUnit(S.sel);}
-    // ... 835 lines omitted
-function openShop(){
-    // ... 834 lines omitted
-}
-function buy(t){
-    // ... 832 lines omitted
-}
-    // ... 831 lines omitted
-function startTurn(side){
-    // ... 830 lines omitted
-}
-function endTurn(){
-    // ... 828 lines omitted
-}
-function checkEnd(){
-    // ... 826 lines omitted
-}
-    // ... 825 lines omitted
-async function aiTurn(){
-    // ... 824 lines omitted
-  }
-    // ... 823 lines omitted
-}
-function aiBuy(rng){
-    // ... 821 lines omitted
-}
-async function aiAct(u){
-    // ... 819 lines omitted
-  }
-    // ... 818 lines omitted
-  }
-    // ... 817 lines omitted
-  }
-    // ... 816 lines omitted
-}
-async function aiMove(u,r,c){
-    // ... 814 lines omitted
-  }
-    // ... 813 lines omitted
-}
-    // ... 812 lines omitted
-function msg(t){$('msg').innerHTML=t;}
-function banner(t){
-    // ... 810 lines omitted
-}
-function stat(l,v){return `<span class="st"><u>${l}</u> <b>${v}</b></span>`;}
-function unitCard(u,foe){
-    // ... 807 lines omitted
-}
-function hideCard(){$('card').style.display='none';}
-function inspect(u){
-    // ... 804 lines omitted
-}
-function showTerrain(r,c){
-    // ... 802 lines omitted
-}
-function addBtn(label,cls,fn,dis){
-    // ... 800 lines omitted
-}
-    // ... 799 lines omitted
-function crow(l,v,cls){return `<div class="crow ${cls||''}"><div class="l">${l}</div><div class="v">${v||''}</div></div>`;}
-function pipRow(u,after){
-    // ... 797 lines omitted
-}
-function calcBlock(a,d,dt,title){
-    // ... 795 lines omitted
-}
-function renderCombat(){
-    // ... 793 lines omitted
-}
-    // ... 792 lines omitted
-function renderHud(keepMsg){
-    // ... 791 lines omitted
-  }
-    // ... 790 lines omitted
-  }
-    // ... 789 lines omitted
-  }
-    // ... 788 lines omitted
-  }
-    // ... 787 lines omitted
-  }
-    // ... 786 lines omitted
-  }
-}
-    // ... 784 lines omitted
-function cycleNext(){
-    // ... 783 lines omitted
-}
-    // ... 782 lines omitted
-function blip(f,d,type,vol){
-    // ... 781 lines omitted
-}
-function vib(ms){if(navigator.vibrate&&!muted)navigator.vibrate(ms);}
-    // ... 779 lines omitted
-function codex(){
-    // ... 778 lines omitted
-}
-function openCodex(first){
-    // ... 776 lines omitted
-}
-function showEnd(win){
-    // ... 774 lines omitted
-}
-function closeModal(){$('modal').classList.remove('show');}
-// ... 772 more lines (total: 1054)<script type="module" src="./src/main.js"></script>
+.who.sm{background:linear-gradient(158deg,#4d89e6,#16305f)}
+.who.ork{background:linear-gradient(158deg,#9ac034,#33490d)}
+.cs{font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:10px;
+  color:var(--gold);opacity:.85;margin:9px 0 3px}
+.cs:first-child{margin-top:0}
+.crow{display:flex;align-items:baseline;gap:10px;font-size:12px;line-height:1.3;padding:2px 0}
+.crow .l{flex:1;opacity:.72}
+.crow .l small{opacity:.6;display:block;font-size:10.5px}
+.crow .v{font-family:Oswald,sans-serif;font-variant-numeric:tabular-nums;color:#ece0bb;font-size:13px}
+.crow.neg .v{color:#ffa285}
+.crow.pos .v{color:#c3e874}
+.ctot{display:flex;align-items:center;gap:10px;margin-top:6px;padding-top:6px;border-top:1px solid #ffffff1f}
+.ctot .l{flex:1;font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:11px;opacity:.7}
+.ctot .big{font-family:Oswald,sans-serif;font-size:23px;color:#ffd27a;line-height:1;font-variant-numeric:tabular-nums}
+.ctot .pv{font-size:12px;opacity:.75;font-variant-numeric:tabular-nums}
+.pips{display:flex;gap:2px;margin-top:7px}
+.pip{flex:1;height:10px;border-radius:1px;background:#ffffff10;box-shadow:inset 0 0 0 1px #00000059}
+.pip.sm{background:linear-gradient(#5f97ea,#20488c)}
+.pip.ork{background:linear-gradient(#a3c93c,#3f5a12)}
+.pip.lost{background:repeating-linear-gradient(45deg,#c9432f 0 3px,#6f1d13 3px 6px)}
+.plabel{font-size:11.5px;opacity:.7;margin-top:4px;font-variant-numeric:tabular-nums}
+.plabel b{opacity:1}
+.cnote{font-size:11.5px;opacity:.6;padding:3px 0}
+
+/* dégâts flottants */
+.fx{position:absolute;z-index:9;text-align:center;pointer-events:none;
+  font-family:Oswald,sans-serif;font-size:15px;color:#ffb9a2;
+  text-shadow:0 1px 0 #000,0 0 8px #000;animation:fxup .95s ease-out forwards}
+.fx.kill{color:#ff6a45;font-size:12px;letter-spacing:.12em}
+@keyframes fxup{0%{opacity:0;transform:translateY(4px)}
+  15%{opacity:1}70%{opacity:1;transform:translateY(-16px)}100%{opacity:0;transform:translateY(-24px)}}
+#shop{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.sh{flex:0 0 auto;width:76px;padding:6px 4px;border:1px solid var(--steel);border-radius:3px;background:#161c22;text-align:center}
+.sh svg{width:24px;height:24px;fill:none;stroke:#cfe0f5;color:#cfe0f5;stroke-width:1.9;overflow:visible}
+.sh svg .f{fill:currentColor;stroke:none}
+.sh .n{font-size:10px;line-height:1.1;margin-top:2px;opacity:.85}
+.sh .c{font-family:Oswald,sans-serif;color:var(--gold);font-size:13px}
+.sh[disabled]{opacity:.3}
+
+/* ---------- bannière & overlays ---------- */
+#banner{position:absolute;left:0;right:0;top:38%;pointer-events:none;text-align:center;opacity:0}
+#banner .bar{background:linear-gradient(90deg,transparent,#000c 12%,#000e 88%,transparent);padding:14px 0;
+  border-top:1px solid #ffffff20;border-bottom:1px solid #ffffff20}
+#banner span{font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.3em;font-size:26px}
+#banner.show{animation:sweep 1.15s ease-out}
+@keyframes sweep{0%{opacity:0;transform:translateX(-30%)}25%{opacity:1;transform:none}75%{opacity:1}100%{opacity:0;transform:translateX(25%)}}
+#modal{position:fixed;inset:0;background:#0a0e12f7;display:none;flex-direction:column;z-index:50}
+#modal.show{display:flex}
+#modalScroll{flex:1;overflow:auto;padding:20px 16px 16px;-webkit-overflow-scrolling:touch}
+#modalFoot{padding:10px 16px calc(10px + env(safe-area-inset-bottom));border-top:1px solid #ffffff1a;
+  background:linear-gradient(#161d24,#0d1216);box-shadow:0 -10px 24px #0009}
+#modalFoot .btn{width:100%;padding:14px 6px;font-size:14px}
+#modalTitle{font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:24px;
+  margin:3px 0 0;line-height:1.05}
+#modal p,#modal li{font-size:13.5px;line-height:1.45;opacity:.85;margin:4px 0}
+#modal ul{padding-left:17px;margin:5px 0}
+#modal li{margin:5px 0}
+.lead{font-size:14px;opacity:.6 !important;margin:9px 0 15px !important}
+.hint{font-size:12px;opacity:.4 !important;margin:12px 0 2px !important}
+
+.key{border:1px solid #33404a;border-left:3px solid var(--gold);border-radius:3px;background:#0e141a;padding:11px 12px}
+.kl{display:flex;gap:10px;padding:4px 0;font-size:13.5px;line-height:1.4}
+.kt{font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:10px;
+  color:var(--gold);min-width:64px;flex:0 0 auto;padding-top:3px;opacity:.9}
+
+.acc{border-top:1px solid #ffffff14}
+.acc:last-of-type{border-bottom:1px solid #ffffff14}
+.acc summary{list-style:none;display:flex;align-items:center;padding:13px 2px;cursor:pointer;
+  font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:12.5px}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary::after{content:"+";margin-left:auto;font-size:17px;line-height:1;color:var(--gold);opacity:.75}
+.acc[open] summary{color:var(--gold)}
+.acc[open] summary::after{content:"–"}
+.accb{padding:0 2px 15px}
+.formula{font-family:Oswald,sans-serif;letter-spacing:.03em;color:#ffd27a;font-size:12.5px;line-height:1.5;
+  border-left:2px solid #ffd27a4d;padding:5px 0 5px 10px;margin:9px 0}
+
+.trow{display:flex;align-items:baseline;gap:9px;padding:5px 0;border-bottom:1px solid #ffffff0d;font-size:12.5px}
+.trow .tn{width:74px;flex:0 0 auto;opacity:.9}
+.trow .tv{width:40px;flex:0 0 auto;font-family:Oswald,sans-serif;color:#ffe9a8;font-variant-numeric:tabular-nums}
+.trow .tc{flex:1;opacity:.5;font-size:11.5px;line-height:1.3}
+
+.rowu{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #ffffff0f;align-items:flex-start}
+.rowu .ic{width:32px;height:32px;border-radius:2px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.rowu .ic svg{width:66%;height:66%;fill:none;stroke:#fff;color:#fff;stroke-width:1.9;overflow:visible}
+.rowu .ic svg .f{fill:currentColor;stroke:none}
+.rowu .ic.sm{background:linear-gradient(158deg,#4d89e6,#16305f)}
+.rowu .ic.ork{background:linear-gradient(158deg,#9ac034,#33490d);
+  clip-path:polygon(0 15%,15% 0,100% 0,100% 85%,85% 100%,0 100%);stroke-linecap:round}
+.rowu .rtxt{flex:1;min-width:0}
+.rn{font-family:Oswald,sans-serif;font-size:13.5px;letter-spacing:.03em}
+.rnote{font-size:11.5px;opacity:.5;line-height:1.35;margin:1px 0 5px}
+.rstat{display:flex;flex-wrap:wrap;gap:4px}
+.rstat span{font-size:10.5px;padding:1px 5px;border:1px solid #2f3941;border-radius:2px;
+  background:#0e1319;font-variant-numeric:tabular-nums}
+.rstat u{text-decoration:none;opacity:.45;letter-spacing:.06em;margin-right:4px}
+.rstat b{font-family:Oswald,sans-serif;color:#ffe9a8;font-weight:400}
+.seedbox{display:flex;gap:6px;margin:9px 0}
+.kicker{font-size:11px;letter-spacing:.22em;opacity:.5;text-transform:uppercase;font-family:Oswald,sans-serif}
+#modal input{flex:1;min-width:0;background:#0d1218;border:1px solid var(--steel);border-radius:3px;
+  color:var(--bone);padding:10px;font-family:Oswald,sans-serif;font-size:14px;letter-spacing:.06em}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div id="top">
+  <div id="faction">
+    <span id="fdot"></span>
+    <div style="min-width:0">
+      <div id="fname" class="stencil">Adeptus Astartes</div>
+      <div id="tsub" class="stencil">Cycle 1 — phase de commandement</div>
+    </div>
+  </div>
+  <div class="pill" title="Réquisition">⚙ <b id="req">5</b></div>
+  <button class="iconbtn" id="btnDanger" title="Zone de menace">☠</button>
+  <button class="iconbtn" id="btnSound" title="Son">♪</button>
+  <button class="iconbtn" id="btnHelp" title="Codex">?</button>
+</div>
+
+<div id="wrap">
+  <div id="board"><div class="grid"></div></div>
+  <div id="banner"><div class="bar"><span></span></div></div>
+  <div id="combat"></div>
+</div>
+
+<div id="bot">
+  <div id="msg">Touche une unité pour la déployer sur le champ de bataille.</div>
+  <div id="card" style="display:none">
+    <div class="por"></div>
+    <div style="flex:1;min-width:0">
+      <div id="nm" class="stencil"></div>
+      <div id="stats"></div>
+    </div>
+  </div>
+  <div id="preview" style="display:none"></div>
+  <div id="shop" style="display:none"></div>
+  <div id="acts"></div>
+</div>
+
+<div id="modal">
+  <div id="modalScroll">
+    <div class="kicker" id="modalKicker">Codex de campagne</div>
+    <h1 id="modalTitle">Zone de guerre</h1>
+    <div id="modalBody"></div>
+  </div>
+  <div id="modalFoot"><button class="btn go" id="btnClose">Engager la bataille</button></div>
+</div>
+
+<script type="module" src="./src/main.js"></script>
 </body>
 </html>
