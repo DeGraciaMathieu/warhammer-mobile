@@ -56,7 +56,7 @@ export function renderHud(keepMsg){
   }
   if(S.phase==='sel'){
     unitCard(S.sel);
-    msg("Touche une case bleue pour te déplacer. Le rouge indique la portée de tir.");
+    msg("Touche une case bleue pour te déplacer, un ennemi cerclé pour attaquer sans bouger. Re-touche l'unité pour agir sur place.");
     addBtn('Annuler','ghost',()=>A.deselect());
     return;
   }

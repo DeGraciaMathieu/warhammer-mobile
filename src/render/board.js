@@ -2,7 +2,7 @@
 import {ROWS,COLS,T,MIN_TILE,BOARD_MARGIN,CAPTURE_GAUGE,BARS_MAX} from '../config.js';
 import {S,MAP,tile} from '../state/state.js';
 import {key,inb,canStop} from '../rules/grid.js';
-import {bars} from '../rules/combat.js';
+import {bars,targetsFrom} from '../rules/combat.js';
 import {potentialFootprint,threatZone} from '../rules/movement.js';
 import {svg} from './icons.js';
 import {$} from './dom.js';
@@ -128,6 +128,8 @@ export function renderOv(){
     /* bleu pur sur le déplacement ; le rouge ne commence qu'au-delà, avec la portée
        potentielle depuis chaque arrêt possible (y compris pour le tir indirect) */
     potentialFootprint(S.units,S.reach,S.sel).forEach(k=>{ if(!S.reach.has(k)) ov((k/COLS)|0,k%COLS,'at'); });
+    /* les ennemis attaquables sans bouger sont ciblables dès la sélection */
+    targetsFrom(S.units,S.sel,S.sel.r,S.sel.c).forEach(e=>ov(e.r,e.c,'tg'));
   }
   if(S.phase==='moved'||S.phase==='target'||S.phase==='preview'){
     S.targets.forEach(e=>ov(e.r,e.c,'tg'));

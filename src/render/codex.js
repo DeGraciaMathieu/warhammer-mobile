@@ -31,7 +31,9 @@ function codex(){
   h+=acc('Commandes',`<ul>
     <li>Touche une unité : les cases <b style="color:#8fb8ff">bleues</b> sont accessibles,
         les <b style="color:#ff9d78">hachures rouges</b> montrent la portée de tir.</li>
-    <li>Touche un ennemi encadré d'équerres pour ouvrir le relevé de combat, puis confirme.</li>
+    <li>Touche un ennemi encadré d'équerres pour ouvrir le relevé de combat, puis confirme.
+        Nul besoin de bouger : l'attaque sur place marche aussi.</li>
+    <li>Re-touche l'unité sélectionnée pour agir sans te déplacer : attaquer, capturer ou attendre.</li>
     <li><b>↶</b> annule le déplacement tant que rien n'est validé.</li>
     <li>Une fois déplacée, toucher une autre unité vaut <b>Attendre</b> : tu enchaînes d'un seul geste.</li>
     <li><b>Suivante</b> saute à la prochaine unité inactive, avec son décompte.</li>

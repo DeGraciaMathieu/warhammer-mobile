@@ -42,7 +42,9 @@ export function onTap(r,c){
     return showTerrain(r,c);
   }
   if(S.phase==='sel'){
-    if(u===S.sel) return deselect();
+    if(u===S.sel){ actInPlace(); return; }             // re-toucher l'unité = agir sans bouger
+    const t=targetsFrom(S.sel,S.sel.r,S.sel.c).find(e=>e.r===r&&e.c===c);
+    if(t){ S.targets=targetsFrom(S.sel,S.sel.r,S.sel.c); return openPreview(t); }
     if(S.reach.has(key(r,c))&&canStop(S.sel,r,c)) return moveTo(r,c);
     if(u&&u.s===S.side&&!u.acted) return select(u);
     if(u) return inspect(u);
@@ -69,6 +71,11 @@ function select(u){
   S.from={r:u.r,c:u.c}; play(AUDIO.SELECT); render();
 }
 function deselect(){S.sel=null;S.phase='idle';S.targets=[];S.pending=null;render();}
+/* menu d'actions sans déplacement : attaque, capture ou attente depuis la case actuelle */
+function actInPlace(){
+  const u=S.sel;
+  S.phase='moved'; S.targets=targetsFrom(u,u.r,u.c); render();
+}
 async function moveTo(r,c){
   const u=S.sel, path=pathTo(u,r,c);
   S.phase='anim'; render();
