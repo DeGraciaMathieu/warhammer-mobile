@@ -300,15 +300,13 @@ import {ROWS,COLS,DIRS,FALLBACK,MAPGEN,INITIAL_FORCES,TNAME,TDEF,COST,U,ROSTER,F
         UNIT_MAX_HP,HP_PER_BAR,BARS_MAX,MIN_DAMAGE,CODEX_FLOOR,WAAAGH_PCT,WAAAGH_MAX_ADJ,
         DEF_POINT_PCT,CAPTURE_GAUGE,START_REQUISITION,BUILDING_HEAL,AI,T,MIN_TILE,BOARD_MARGIN,
         AUDIO,VIB} from './src/config.js';
+import {mulberry32,randomSeed} from './src/rng.js';
 /* ============================================================ DONNÉES */
 let MAP=[], SEED=0;
 
 /* ---------- génération procédurale ----------
    On ne dessine que la moitié haute, puis on la fait pivoter de 180° :
    les deux camps héritent exactement du même terrain, jamais de carte injuste. */
-function mulberry32(a){return function(){a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);
-  t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-
 function genMap(seed){
   SEED=seed>>>0;
   const rnd=mulberry32(SEED), H=ROWS>>1, mr=r=>ROWS-1-r, mc=c=>COLS-1-c;
@@ -452,6 +450,9 @@ const svg=t=>'<svg viewBox="0 0 24 24">'+I[t]+'</svg>';
 
 /* ============================================================ ÉTAT */
 let S=null, TS=44, uid=1;
+/* RNG des décisions IA : seedé au hasard à chaque session (comportement d'origine),
+   injectable avec une graine fixe dans les tests */
+const aiRng=mulberry32(randomSeed());
 const board=document.getElementById('board');
 const $=id=>document.getElementById(id);
 const key=(r,c)=>r*COLS+c;
@@ -463,7 +464,7 @@ const unitAt=(r,c)=>S.units.find(u=>u.hp>0&&u.r===r&&u.c===c);
 const bldAt=(r,c)=>S.blds.find(b=>b.r===r&&b.c===c);
 
 function newGame(seed){
-  genMap(seed===undefined?(Math.random()*4294967296)>>>0:seed);
+  genMap(seed===undefined?randomSeed():seed);
   S={turn:1,side:'sm',req:{sm:START_REQUISITION,ork:START_REQUISITION},units:[],blds:[],sel:null,phase:'idle',
      from:null,targets:[],pending:null,danger:false,over:false};
   for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
@@ -883,7 +884,7 @@ function costField(tr,tc,cls){
 }
 async function aiTurn(){
   if(S.over)return;
-  aiBuy();
+  aiBuy(aiRng);
   await sleep(T.AI_OPENING);
   const list=S.units.filter(u=>u.hp>0&&u.s==='ork').sort((a,b)=>U[b.t].rng[1]-U[a.t].rng[1]);
   for(const u of list){
@@ -896,11 +897,11 @@ async function aiTurn(){
   await sleep(T.AI_CLOSING);
   startTurn('sm');
 }
-function aiBuy(){
+function aiBuy(rng){
   const hq=S.blds.find(b=>b.kind==='hq'&&b.own==='ork');
   if(!hq||unitAt(hq.r,hq.c))return;
   const r=S.req.ork;
-  const choice=AI.BUY.find(o=>r>=o.req&&(o.p>=1||Math.random()<o.p));
+  const choice=AI.BUY.find(o=>r>=o.req&&(o.p>=1||rng()<o.p));
   if(!choice)return;
   const pick=choice.t;
   S.req.ork-=U[pick].cost;
