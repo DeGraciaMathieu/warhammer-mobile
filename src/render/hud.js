@@ -81,8 +81,8 @@ export function renderHud(keepMsg){
     return;
   }
   if(S.phase==='preview'){
-    /* tout le détail est dans le relevé de combat : le panneau bas ne garde que les boutons */
-    hideCard();
+    /* le relevé porte le détail du combat ; la fiche du bas montre la cible ennemie */
+    unitCard(S.pending.t);
     renderCombatPanel();
     msg("");
     addBtn('Confirmer l\'attaque','warn',()=>A.confirmAttack());
