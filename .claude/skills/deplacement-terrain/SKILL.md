@@ -20,8 +20,11 @@ auto_invoke: true
 - `reachable(units,map,u)` → `{dist,prev}` : Dijkstra borné par `mv`. Un **ennemi bloque
   le passage**, un allié se traverse mais on ne s'y arrête pas (`canStop`, `rules/grid.js`).
 - `pathTo(prev,u,r,c)` : chemin reconstruit, départ exclu.
-- `atkFootprint(units,reach,u)` : cases frappables — depuis chaque arrêt possible pour le
-  contact, depuis la position actuelle seulement pour le tir indirect (`rng[1]>1`).
+- `atkFootprint(units,reach,u)` : cases frappables réelles — depuis chaque arrêt possible
+  pour le contact, depuis la position actuelle seulement pour le tir indirect (`rng[1]>1`).
+- `potentialFootprint(units,reach,u)` : anneau depuis chaque arrêt possible, même pour le
+  tir indirect — **affichage de sélection uniquement** (le rouge au-delà du bleu), jamais
+  la résolution ni la zone de menace.
 - `threatZone(units,map,side)` : union des empreintes de tout un camp (bouton ☠).
 - `costField(map,tr,tc,cls)` : champ de distance **sans limite de mouvement** — sert à
   l'avance de l'IA, pas au joueur.

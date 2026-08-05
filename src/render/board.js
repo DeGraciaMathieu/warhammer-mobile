@@ -1,9 +1,9 @@
 /* Rendu du plateau — tuiles de terrain, pions, bâtiments, overlays, effets. */
-import {ROWS,COLS,U,T,MIN_TILE,BOARD_MARGIN,CAPTURE_GAUGE,BARS_MAX} from '../config.js';
+import {ROWS,COLS,T,MIN_TILE,BOARD_MARGIN,CAPTURE_GAUGE,BARS_MAX} from '../config.js';
 import {S,MAP,tile} from '../state/state.js';
 import {key,inb,canStop} from '../rules/grid.js';
 import {bars} from '../rules/combat.js';
-import {atkFootprint,threatZone} from '../rules/movement.js';
+import {potentialFootprint,threatZone} from '../rules/movement.js';
 import {svg} from './icons.js';
 import {$} from './dom.js';
 
@@ -125,10 +125,9 @@ export function renderOv(){
   }
   if(S.phase==='sel'&&S.sel){
     S.reach.forEach((_,k)=>{ if(canStop(S.units,S.sel,(k/COLS)|0,k%COLS)) ov((k/COLS)|0,k%COLS,'mv'); });
-    /* tir indirect : l'anneau se montre en entier, même sur les cases aussi accessibles
-       en déplacement — sinon il apparaît troué (bouger et tirer sont exclusifs) */
-    const indirect=U[S.sel.t].rng[1]>1;
-    atkFootprint(S.units,S.reach,S.sel).forEach(k=>{ if(indirect||!S.reach.has(k)) ov((k/COLS)|0,k%COLS,'at'); });
+    /* bleu pur sur le déplacement ; le rouge ne commence qu'au-delà, avec la portée
+       potentielle depuis chaque arrêt possible (y compris pour le tir indirect) */
+    potentialFootprint(S.units,S.reach,S.sel).forEach(k=>{ if(!S.reach.has(k)) ov((k/COLS)|0,k%COLS,'at'); });
   }
   if(S.phase==='moved'||S.phase==='target'||S.phase==='preview'){
     S.targets.forEach(e=>ov(e.r,e.c,'tg'));

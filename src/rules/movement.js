@@ -26,9 +26,8 @@ export function pathTo(prev,u,r,c){
   while(k!==undefined&&k!==key(u.r,u.c)){p.unshift(k);k=prev.get(k);}
   return p;
 }
-export function atkFootprint(units,reach,u){
-  const [a,b]=U[u.t].rng, out=new Set();
-  const origins = b>1 ? [key(u.r,u.c)] : [...reach.keys()].filter(k=>canStop(units,u,(k/COLS)|0,k%COLS));
+function ringFrom(origins,a,b){
+  const out=new Set();
   origins.forEach(k=>{
     const r=(k/COLS)|0,c=k%COLS;
     for(let dr=-b;dr<=b;dr++)for(let dc=-b;dc<=b;dc++){
@@ -38,6 +37,19 @@ export function atkFootprint(units,reach,u){
     }
   });
   return out;
+}
+/* empreinte réelle : le tir indirect ne frappe que depuis sa position actuelle */
+export function atkFootprint(units,reach,u){
+  const [a,b]=U[u.t].rng;
+  const origins = b>1 ? [key(u.r,u.c)] : [...reach.keys()].filter(k=>canStop(units,u,(k/COLS)|0,k%COLS));
+  return ringFrom(origins,a,b);
+}
+/* empreinte potentielle : anneau depuis chaque arrêt possible, même pour le tir
+   indirect — sert à l'affichage de sélection, jamais à la résolution ni à la menace */
+export function potentialFootprint(units,reach,u){
+  const [a,b]=U[u.t].rng;
+  const origins=[...reach.keys()].filter(k=>canStop(units,u,(k/COLS)|0,k%COLS));
+  return ringFrom(origins,a,b);
 }
 export function threatZone(units,map,side){
   const out=new Set();

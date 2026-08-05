@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {reachable,pathTo,atkFootprint,threatZone,costField} from '../src/rules/movement.js';
+import {reachable,pathTo,atkFootprint,potentialFootprint,threatZone,costField} from '../src/rules/movement.js';
 import {key} from '../src/rules/grid.js';
 
 const plain=()=>Array.from({length:12},()=>Array(10).fill('.'));
@@ -36,6 +36,15 @@ test('le tir indirect ne s’étend que depuis la position actuelle, en anneau 2
   assert.equal(fp.has(key(5,7)), true);            // distance 2
   assert.equal(fp.has(key(5,8)), true);            // distance 3
   assert.equal(fp.has(key(5,6)), false);           // trop près
+});
+
+test('la portée potentielle du tir indirect s\'étend depuis chaque arrêt possible, sans trou', () => {
+  const u={id:1,t:'dev',s:'sm',r:5,c:5,hp:100};   // mouvement 2, anneau 2-3
+  const {dist}=reachable([u],plain(),u);
+  const fp=potentialFootprint([u],dist,u);
+  assert.equal(fp.has(key(5,0)), true);            // arrêt en (5,3) + 3 de portée
+  assert.equal(fp.has(key(5,7)), true);            // dans l'anneau depuis la position actuelle
+  assert.equal(atkFootprint([u],dist,u).has(key(5,0)), false); // la menace réelle, elle, reste immobile
 });
 
 test('la zone de menace couvre tout ce que le camp peut atteindre puis frapper', () => {
