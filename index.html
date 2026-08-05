@@ -297,11 +297,12 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
 
 <script type="module">
 import {ROWS,COLS,DIRS,FALLBACK,MAPGEN,INITIAL_FORCES,TNAME,TDEF,COST,U,ROSTER,FNAME,
-        UNIT_MAX_HP,HP_PER_BAR,BARS_MAX,MIN_DAMAGE,CODEX_FLOOR,WAAAGH_PCT,WAAAGH_MAX_ADJ,
-        DEF_POINT_PCT,CAPTURE_GAUGE,START_REQUISITION,BUILDING_HEAL,AI,T,MIN_TILE,BOARD_MARGIN,
+        UNIT_MAX_HP,HP_PER_BAR,BARS_MAX,CODEX_FLOOR,DEF_POINT_PCT,CAPTURE_GAUGE,
+        START_REQUISITION,BUILDING_HEAL,AI,T,MIN_TILE,BOARD_MARGIN,
         AUDIO,VIB} from './src/config.js';
 import {mulberry32,randomSeed} from './src/rng.js';
 import * as G from './src/rules/grid.js';
+import * as C from './src/rules/combat.js';
 /* ============================================================ DONNÉES */
 let MAP=[], SEED=0;
 
@@ -458,7 +459,7 @@ const board=document.getElementById('board');
 const $=id=>document.getElementById(id);
 const key=G.key, inb=G.inb;
 const tile=(r,c)=>MAP[r][c];
-const bars=u=>Math.max(1,Math.ceil(u.hp/HP_PER_BAR));
+const bars=C.bars;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const unitAt=(r,c)=>G.unitAt(S.units,r,c);
 const bldAt=(r,c)=>G.bldAt(S.blds,r,c);
@@ -653,34 +654,10 @@ function atkFootprint(u){
   });
   return out;
 }
-function targetsFrom(u,r,c){
-  const [a,b]=U[u.t].rng;
-  if(b>1&&(r!==u.r||c!==u.c))return [];
-  return S.units.filter(e=>e.hp>0&&e.s!==u.s&&Math.abs(e.r-r)+Math.abs(e.c-c)>=a&&Math.abs(e.r-r)+Math.abs(e.c-c)<=b);
-}
-function dmgDetail(a,d,ar,ac){
-  ar=ar??a.r; ac=ac??a.c;
-  const A=U[a.t],D=U[d.t];
-  const base=A.dmg[D.armor];
-  const raw=bars(a)/BARS_MAX;
-  let sc=raw, codex=false;
-  if(a.s==='sm'&&raw<CODEX_FLOOR){sc=CODEX_FLOOR;codex=true;}   // Discipline du Codex
-  let orks=0;
-  if(a.s==='ork'){for(const[dr,dc]of DIRS){const o=unitAt(ar+dr,ac+dc);if(o&&o.s==='ork'&&o!==a)orks++;}}
-  orks=Math.min(WAAAGH_MAX_ADJ,orks);
-  const mob=1+orks*(WAAAGH_PCT/100);                            // Waaagh!
-  const tdef=TDEF[tile(d.r,d.c)], udef=D.df;
-  const red=1-(tdef+udef)*(DEF_POINT_PCT/100);
-  const brut=base*sc*mob*red;
-  return {base,raw,sc,codex,orks,mob,tdef,udef,red,brut,dmg:Math.max(MIN_DAMAGE,Math.round(brut)),
-          plancher:Math.round(brut)<MIN_DAMAGE,armor:D.armor};
-}
-function dmgCalc(a,d,ar,ac){return dmgDetail(a,d,ar,ac).dmg;}
-function counterOf(a,d,ar,ac){
-  if(U[d.t].rng[1]>1)return 0;
-  if(Math.abs(d.r-ar)+Math.abs(d.c-ac)!==1)return 0;
-  return dmgCalc(d,a,d.r,d.c);
-}
+const targetsFrom=(u,r,c)=>C.targetsFrom(S.units,u,r,c);
+const dmgDetail=(a,d,ar,ac)=>C.dmgDetail(S.units,MAP,a,d,ar,ac);
+const dmgCalc=(a,d,ar,ac)=>C.dmgCalc(S.units,MAP,a,d,ar,ac);
+const counterOf=(a,d,ar,ac)=>C.counterOf(S.units,MAP,a,d,ar,ac);
 function threatZone(side){
   const out=new Set();
   S.units.filter(u=>u.hp>0&&u.s===side).forEach(u=>{
@@ -1013,7 +990,7 @@ function addBtn(label,cls,fn,dis){
 }
 /* ---- relevé de combat ---- */
 const fmtx=x=>x.toFixed(2).replace('.',',');
-const toPV=n=>(n/HP_PER_BAR).toFixed(1).replace('.',',');
+const toPV=C.toPV;
 const chip=u=>`<span class="who ${u.s}">${svg(u.t)}</span>`;
 function crow(l,v,cls){return `<div class="crow ${cls||''}"><div class="l">${l}</div><div class="v">${v||''}</div></div>`;}
 function pipRow(u,after){
