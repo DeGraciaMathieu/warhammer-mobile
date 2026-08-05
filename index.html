@@ -295,23 +295,12 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
   <div id="modalFoot"><button class="btn go" id="btnClose">Engager la bataille</button></div>
 </div>
 
-<script>
+<script type="module">
+import {ROWS,COLS,DIRS,FALLBACK,MAPGEN,INITIAL_FORCES,TNAME,TDEF,COST,U,ROSTER,FNAME,
+        UNIT_MAX_HP,HP_PER_BAR,BARS_MAX,MIN_DAMAGE,CODEX_FLOOR,WAAAGH_PCT,WAAAGH_MAX_ADJ,
+        DEF_POINT_PCT,CAPTURE_GAUGE,START_REQUISITION,BUILDING_HEAL,AI,T,MIN_TILE,BOARD_MARGIN,
+        AUDIO,VIB} from './src/config.js';
 /* ============================================================ DONNÉES */
-const ROWS=12, COLS=10, DIRS=[[-1,0],[1,0],[0,-1],[0,1]];
-/* carte de secours si la génération échoue */
-const FALLBACK=[
-"#uu.O.uc.#",
-".c.fr.f#..",
-"u.#.r.#.f.",
-".B.cr..cB.",
-"f.f#rr.c.#",
-".u#.rrB.u.",
-".u.Brr.#u.",
-"#.c.rr#f.f",
-".Bc..rc.B.",
-".f.#.r.#.u",
-"..#f.rf.c.",
-"#.cu.H.uu#"];
 let MAP=[], SEED=0;
 
 /* ---------- génération procédurale ----------
@@ -324,7 +313,7 @@ function genMap(seed){
   SEED=seed>>>0;
   const rnd=mulberry32(SEED), H=ROWS>>1, mr=r=>ROWS-1-r, mc=c=>COLS-1-c;
 
-  for(let attempt=0;attempt<120;attempt++){
+  for(let attempt=0;attempt<MAPGEN.MAX_ATTEMPTS;attempt++){
     const g=Array.from({length:ROWS},()=>Array(COLS).fill('.'));
 
     // amas de terrain par marche aléatoire (plus organique qu'un semis uniforme)
@@ -339,13 +328,10 @@ function genMap(seed){
         }
       }
     };
-    scatter('u',3,2,4);   // ruines
-    scatter('f',3,2,4);   // bois
-    scatter('c',4,1,3);   // cratères
-    scatter('#',5,1,3);   // rochers
+    MAPGEN.CLUSTERS.forEach(cl=>scatter(cl.terrain,cl.count,cl.min,cl.max));
 
     // forteresse, avec son dégagement immédiat
-    const hqc=2+Math.floor(rnd()*(COLS-4));
+    const hqc=MAPGEN.HQ_COL_MARGIN+Math.floor(rnd()*(COLS-2*MAPGEN.HQ_COL_MARGIN));
     g[0][hqc]='O';
     DIRS.forEach(([dr,dc])=>{const r=dr,c=hqc+dc;
       if(r>=0&&r<H&&c>=0&&c<COLS&&g[r][c]==='#')g[r][c]='.';});
@@ -353,7 +339,7 @@ function genMap(seed){
     // route : descente depuis la forteresse avec des écarts latéraux
     let cc=hqc;
     for(let r=1;r<H;r++){
-      if(rnd()<.35){const n=cc+(rnd()<.5?-1:1); if(n>=1&&n<COLS-1){g[r][cc]='r';cc=n;}}
+      if(rnd()<MAPGEN.ROAD_TURN_PROB){const n=cc+(rnd()<.5?-1:1); if(n>=1&&n<COLS-1){g[r][cc]='r';cc=n;}}
       g[r][cc]='r';
     }
     // segment horizontal sur la ligne de front : garantit la jonction avec la route miroir
@@ -362,15 +348,15 @@ function genMap(seed){
     // bastions : espacés, loin de la forteresse, au moins un par flanc
     const cand=[];
     for(let r=1;r<H;r++)for(let c=0;c<COLS;c++)
-      if(g[r][c]==='.'&&r+Math.abs(c-hqc)>=3) cand.push([r,c]);
+      if(g[r][c]==='.'&&r+Math.abs(c-hqc)>=MAPGEN.BASTION_HQ_DIST) cand.push([r,c]);
     for(let i=cand.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[cand[i],cand[j]]=[cand[j],cand[i]];}
     const bs=[];
     for(const[r,c] of cand){
-      if(bs.every(([r2,c2])=>Math.abs(r-r2)+Math.abs(c-c2)>=4)) bs.push([r,c]);
-      if(bs.length===3)break;
+      if(bs.every(([r2,c2])=>Math.abs(r-r2)+Math.abs(c-c2)>=MAPGEN.BASTION_SPACING)) bs.push([r,c]);
+      if(bs.length===MAPGEN.BASTION_COUNT)break;
     }
-    if(bs.length<3) continue;
-    if(!bs.some(([,c])=>c<=2)||!bs.some(([,c])=>c>=COLS-3)) continue;
+    if(bs.length<MAPGEN.BASTION_COUNT) continue;
+    if(!bs.some(([,c])=>c<=MAPGEN.FLANK_LEFT_COL)||!bs.some(([,c])=>c>=COLS-MAPGEN.FLANK_RIGHT_OFFSET)) continue;
     bs.forEach(([r,c])=>g[r][c]='B');
 
     // rotation 180°
@@ -381,7 +367,7 @@ function genMap(seed){
 
     // réparation de connexité : on ouvre les rochers qui isolent une poche
     let ok=false;
-    for(let it=0;it<40;it++){
+    for(let it=0;it<MAPGEN.REPAIR_ITERATIONS;it++){
       const seen=new Set([hqc]), q=[[0,hqc]];
       while(q.length){
         const[r,c]=q.shift();
@@ -412,11 +398,11 @@ function genMap(seed){
 
     // densité : ni terrain vide, ni labyrinthe
     const solid=g.flat().filter(x=>x!=='.').length/(ROWS*COLS);
-    if(solid<.42||solid>.66) continue;
+    if(solid<MAPGEN.DENSITY_MIN||solid>MAPGEN.DENSITY_MAX) continue;
     // la forteresse doit rester praticable
     const libres=DIRS.filter(([dr,dc])=>{const r=dr,c=hqc+dc;
       return r>=0&&r<ROWS&&c>=0&&c<COLS&&g[r][c]!=='#';}).length;
-    if(libres<2) continue;
+    if(libres<MAPGEN.HQ_MIN_OPEN) continue;
 
     MAP=g; return true;
   }
@@ -430,7 +416,7 @@ function placeArmies(add){
   let hr=ROWS-1,hc=0;
   for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++) if(MAP[r][c]==='H'){hr=r;hc=c;}
   const seen=new Set([hr*COLS+hc]), q=[[hr,hc]], slots=[];
-  while(q.length&&slots.length<6){
+  while(q.length&&slots.length<MAPGEN.DEPLOY_SLOTS){
     const[r,c]=q.shift();
     for(const[dr,dc] of DIRS){
       const nr=r+dr,nc=c+dc,k=nr*COLS+nc;
@@ -442,19 +428,9 @@ function placeArmies(add){
       if('.rfuc'.indexOf(t)>=0) slots.push([nr,nc]);
     }
   }
-  const SMR=['dev','tac','tac','pre','spe'], OKR=['loo','boy','boy','nob','boy','bug'];
-  slots.forEach(([r,c],i)=>{if(i<SMR.length) add(SMR[i],r,c);});
-  slots.forEach(([r,c],i)=>{if(i<OKR.length) add(OKR[i],ROWS-1-r,COLS-1-c);});
+  slots.forEach(([r,c],i)=>{if(i<INITIAL_FORCES.sm.length) add(INITIAL_FORCES.sm[i],r,c);});
+  slots.forEach(([r,c],i)=>{if(i<INITIAL_FORCES.ork.length) add(INITIAL_FORCES.ork[i],ROWS-1-r,COLS-1-c);});
 }
-
-const TNAME={'.':'Plaine cendreuse','r':'Route impériale','f':'Bois calcinés','u':'Ruines','c':'Cratère','#':'Rocher','B':'Bastion','H':'Forteresse Astartes','O':'Forteresse Ork'};
-const TDEF ={'.':0,'r':0,'f':2,'u':3,'c':1,'#':0,'B':3,'H':4,'O':4};
-const COST={
-  pied:     {'.':1,'r':1,'f':2,'u':2,'c':2,'B':1,'H':1,'O':1},
-  marcheur: {'.':1,'r':1,'f':2,'u':1,'c':1,'B':1,'H':1,'O':1},
-  vehicule: {'.':1,'r':1,'f':3,'u':3,'c':2,'B':1,'H':1,'O':1},
-  antigrav: {'.':1,'r':1,'f':1,'u':1,'c':1,'B':1,'H':1,'O':1}
-};
 
 /* symboles tactiques : croix = infanterie, arc + point = tir indirect,
    caisson sur pattes = marcheur, ovale = blindé, oblique = rapide */
@@ -474,23 +450,6 @@ const I={
 };
 const svg=t=>'<svg viewBox="0 0 24 24">'+I[t]+'</svg>';
 
-const U={
- tac:{n:"Marine tactique",  s:'sm', mv:3, cls:'pied',     rng:[1,1], armor:'inf', df:0, cost:3, inf:1, dmg:{inf:55,veh:15}, note:"Polyvalent, capture les objectifs."},
- asl:{n:"Escouade d'assaut",s:'sm', mv:5, cls:'antigrav', rng:[1,1], armor:'inf', df:0, cost:5, inf:1, dmg:{inf:65,veh:25}, note:"Réacteurs dorsaux : ignore le terrain."},
- dev:{n:"Devastator",       s:'sm', mv:2, cls:'pied',     rng:[2,3], armor:'inf', df:0, cost:6, inf:1, dmg:{inf:70,veh:55}, note:"Tir indirect. Doit rester immobile."},
- dre:{n:"Dreadnought",      s:'sm', mv:3, cls:'marcheur', rng:[1,1], armor:'veh', df:2, cost:8,        dmg:{inf:75,veh:65}, note:"Marcheur blindé, franchit les ruines."},
- pre:{n:"Predator",         s:'sm', mv:5, cls:'vehicule', rng:[1,1], armor:'veh', df:1, cost:9,        dmg:{inf:80,veh:75}, note:"Char de bataille. Fuit les forêts."},
- spe:{n:"Land Speeder",     s:'sm', mv:7, cls:'antigrav', rng:[1,1], armor:'veh', df:0, cost:5,        dmg:{inf:50,veh:25}, note:"Antigrav. Rapide mais fragile."},
- boy:{n:"Ork Boyz",         s:'ork',mv:3, cls:'pied',     rng:[1,1], armor:'inf', df:0, cost:2, inf:1, dmg:{inf:50,veh:12}, note:"Chair à canon. Nombreux, donc forts."},
- nob:{n:"Nobz",             s:'ork',mv:3, cls:'pied',     rng:[1,1], armor:'inf', df:1, cost:5, inf:1, dmg:{inf:70,veh:30}, note:"Gros bras en armure de bric et de broc."},
- loo:{n:"Lootas",           s:'ork',mv:2, cls:'pied',     rng:[2,3], armor:'inf', df:0, cost:6, inf:1, dmg:{inf:65,veh:50}, note:"Tir indirect. Doit rester immobile."},
- ddr:{n:"Deff Dread",       s:'ork',mv:3, cls:'marcheur', rng:[1,1], armor:'veh', df:2, cost:8,        dmg:{inf:80,veh:60}, note:"Marcheur à scies. Brutal au contact."},
- bug:{n:"Warbuggy",         s:'ork',mv:7, cls:'vehicule', rng:[1,1], armor:'veh', df:0, cost:4,        dmg:{inf:45,veh:20}, note:"Roule vite, casse aussi vite."},
- bat:{n:"Battlewagon",      s:'ork',mv:5, cls:'vehicule', rng:[1,1], armor:'veh', df:1, cost:9,        dmg:{inf:75,veh:70}, note:"Forteresse roulante hérissée de pointes."}
-};
-const ROSTER={sm:['tac','asl','dev','spe','dre','pre'], ork:['boy','bug','nob','loo','ddr','bat']};
-const FNAME={sm:"Adeptus Astartes", ork:"Waaagh! Grimskull"};
-
 /* ============================================================ ÉTAT */
 let S=null, TS=44, uid=1;
 const board=document.getElementById('board');
@@ -498,22 +457,22 @@ const $=id=>document.getElementById(id);
 const key=(r,c)=>r*COLS+c;
 const inb=(r,c)=>r>=0&&r<ROWS&&c>=0&&c<COLS;
 const tile=(r,c)=>MAP[r][c];
-const bars=u=>Math.max(1,Math.ceil(u.hp/10));
+const bars=u=>Math.max(1,Math.ceil(u.hp/HP_PER_BAR));
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const unitAt=(r,c)=>S.units.find(u=>u.hp>0&&u.r===r&&u.c===c);
 const bldAt=(r,c)=>S.blds.find(b=>b.r===r&&b.c===c);
 
 function newGame(seed){
   genMap(seed===undefined?(Math.random()*4294967296)>>>0:seed);
-  S={turn:1,side:'sm',req:{sm:5,ork:5},units:[],blds:[],sel:null,phase:'idle',
+  S={turn:1,side:'sm',req:{sm:START_REQUISITION,ork:START_REQUISITION},units:[],blds:[],sel:null,phase:'idle',
      from:null,targets:[],pending:null,danger:false,over:false};
   for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
     const t=tile(r,c);
-    if(t==='B') S.blds.push({r,c,kind:'bastion',own:null,cap:20});
-    if(t==='H') S.blds.push({r,c,kind:'hq',own:'sm',cap:20});
-    if(t==='O') S.blds.push({r,c,kind:'hq',own:'ork',cap:20});
+    if(t==='B') S.blds.push({r,c,kind:'bastion',own:null,cap:CAPTURE_GAUGE});
+    if(t==='H') S.blds.push({r,c,kind:'hq',own:'sm',cap:CAPTURE_GAUGE});
+    if(t==='O') S.blds.push({r,c,kind:'hq',own:'ork',cap:CAPTURE_GAUGE});
   }
-  const add=(t,r,c)=>S.units.push({id:uid++,t,s:U[t].s,r,c,hp:100,acted:false});
+  const add=(t,r,c)=>S.units.push({id:uid++,t,s:U[t].s,r,c,hp:UNIT_MAX_HP,acted:false});
   placeArmies(add);
   S.hq={sm:S.blds.find(b=>b.kind==='hq'&&b.own==='sm'),
         ork:S.blds.find(b=>b.kind==='hq'&&b.own==='ork')};
@@ -525,6 +484,8 @@ function regenSeed(){
   const v=parseInt(($('seedin')||{}).value,10);
   if(!isNaN(v)){closeModal();newGame(v>>>0);}
 }
+/* appelées par les onclick inline de la modale Codex — un module n'expose rien en global */
+window.regenNew=regenNew; window.regenSeed=regenSeed;
 
 /* ============================================================ RENDU PLATEAU */
 const TBG={'.':'#2e363d','r':'#2e363d','f':'#26332b','u':'#333b42','c':'#252c32','#':'#161d22','B':'#303840','H':'#303840','O':'#303840'};
@@ -583,7 +544,7 @@ function buildTiles(){
 }
 function layout(){
   const w=$('wrap');
-  TS=Math.max(26,Math.floor(Math.min((w.clientWidth-14)/COLS,(w.clientHeight-14)/ROWS)));
+  TS=Math.max(MIN_TILE,Math.floor(Math.min((w.clientWidth-BOARD_MARGIN)/COLS,(w.clientHeight-BOARD_MARGIN)/ROWS)));
   document.documentElement.style.setProperty('--ts',TS+'px');
   board.style.width=TS*COLS+'px'; board.style.height=TS*ROWS+'px';
   board.querySelectorAll('.t').forEach(d=>{
@@ -603,7 +564,7 @@ function renderBlds(){
     const o=document.createElement('div'); o.className='b-owner';
     o.style.background=b.own==='sm'?'var(--sm)':b.own==='ork'?'var(--ork)':'#6a6357';
     el.appendChild(o);
-    if(b.cap<20){const c=document.createElement('div');c.className='b-cap';c.textContent=b.cap;el.appendChild(c);}
+    if(b.cap<CAPTURE_GAUGE){const c=document.createElement('div');c.className='b-cap';c.textContent=b.cap;el.appendChild(c);}
   });
 }
 function renderUnits(){
@@ -624,7 +585,7 @@ function renderUnits(){
     box.querySelectorAll('.hp,.cap').forEach(e=>e.remove());
     const g=box.querySelector('.gauge i');
     if(g){g.style.width=Math.max(4,u.hp)+'%';g.className=bars(u)<=3?'low':'';}
-    if(bars(u)<10){const h=document.createElement('div');h.className='hp'+(bars(u)<=3?' low':'');h.textContent=bars(u);box.appendChild(h);}
+    if(bars(u)<BARS_MAX){const h=document.createElement('div');h.className='hp'+(bars(u)<=3?' low':'');h.textContent=bars(u);box.appendChild(h);}
     if(u.capturing){const cc=document.createElement('div');cc.className='cap';cc.textContent='⚑';box.appendChild(cc);}
   });
   board.querySelectorAll('.u').forEach(el=>{ if(!seen.has(+el.dataset.id)) el.remove(); });
@@ -700,18 +661,18 @@ function dmgDetail(a,d,ar,ac){
   ar=ar??a.r; ac=ac??a.c;
   const A=U[a.t],D=U[d.t];
   const base=A.dmg[D.armor];
-  const raw=bars(a)/10;
+  const raw=bars(a)/BARS_MAX;
   let sc=raw, codex=false;
-  if(a.s==='sm'&&raw<.6){sc=.6;codex=true;}          // Discipline du Codex
+  if(a.s==='sm'&&raw<CODEX_FLOOR){sc=CODEX_FLOOR;codex=true;}   // Discipline du Codex
   let orks=0;
   if(a.s==='ork'){for(const[dr,dc]of DIRS){const o=unitAt(ar+dr,ac+dc);if(o&&o.s==='ork'&&o!==a)orks++;}}
-  orks=Math.min(3,orks);
-  const mob=1+orks*.05;                              // Waaagh!
+  orks=Math.min(WAAAGH_MAX_ADJ,orks);
+  const mob=1+orks*(WAAAGH_PCT/100);                            // Waaagh!
   const tdef=TDEF[tile(d.r,d.c)], udef=D.df;
-  const red=1-(tdef+udef)*.05;
+  const red=1-(tdef+udef)*(DEF_POINT_PCT/100);
   const brut=base*sc*mob*red;
-  return {base,raw,sc,codex,orks,mob,tdef,udef,red,brut,dmg:Math.max(5,Math.round(brut)),
-          plancher:Math.round(brut)<5,armor:D.armor};
+  return {base,raw,sc,codex,orks,mob,tdef,udef,red,brut,dmg:Math.max(MIN_DAMAGE,Math.round(brut)),
+          plancher:Math.round(brut)<MIN_DAMAGE,armor:D.armor};
 }
 function dmgCalc(a,d,ar,ac){return dmgDetail(a,d,ar,ac).dmg;}
 function counterOf(a,d,ar,ac){
@@ -770,7 +731,7 @@ function onTap(r,c){
 function select(u){
   S.sel=u; S.phase='sel';
   const {dist,prev}=reachable(u); S.reach=dist; S.prev=prev;
-  S.from={r:u.r,c:u.c}; blip(520,.05); render();
+  S.from={r:u.r,c:u.c}; play(AUDIO.SELECT); render();
 }
 function deselect(){S.sel=null;S.phase='idle';S.targets=[];S.pending=null;render();}
 async function moveTo(r,c){
@@ -780,13 +741,13 @@ async function moveTo(r,c){
   for(const k of path){
     u.r=(k/COLS)|0; u.c=k%COLS;
     el.style.transform=`translate(${u.c*TS}px,${u.r*TS}px)`;
-    blip(320,.02,'sine',.02); await sleep(85);
+    play(AUDIO.STEP); await sleep(T.PLAYER_STEP);
   }
   u.moved = (u.r!==S.from.r||u.c!==S.from.c);
   if(u.moved){
     u.capturing=false;
     const old=bldAt(S.from.r,S.from.c);
-    if(old&&old.cap<20&&!unitAt(old.r,old.c)) old.cap=20;
+    if(old&&old.cap<CAPTURE_GAUGE&&!unitAt(old.r,old.c)) old.cap=CAPTURE_GAUGE;
   }
   S.phase='moved'; S.targets=targetsFrom(u,u.r,u.c); render();
 }
@@ -814,7 +775,7 @@ async function confirmAttack(){
   S.phase='anim'; render();
   await strike(u,t);
   let ct=0;
-  if(t.hp>0){ct=counterOf(u,t,u.r,u.c); if(ct){await sleep(180); await strike(t,u,ct);}}
+  if(t.hp>0){ct=counterOf(u,t,u.r,u.c); if(ct){await sleep(T.COUNTER_DELAY); await strike(t,u,ct);}}
   finishUnit(u);
   msg(`${uName} inflige <b>${p.dtA.dmg}</b> (${toPV(p.dtA.dmg)} PV) · ${tName} ${tB} → ${t.hp<=0?'<span class="dead">détruit</span>':bars(t)}`
     +(ct?` — riposte <b>${ct}</b> · ${uName} ${uB} → ${u.hp<=0?'<span class="dead">détruit</span>':bars(u)}`:''));
@@ -823,28 +784,28 @@ function floatFX(r,c,txt,cls){
   const d=document.createElement('div');
   d.className='fx '+(cls||''); d.textContent=txt;
   d.style.cssText=`left:${c*TS}px;top:${r*TS-6}px;width:${TS}px`;
-  board.appendChild(d); setTimeout(()=>d.remove(),960);
+  board.appendChild(d); setTimeout(()=>d.remove(),T.FX_LIFETIME);
 }
 async function strike(a,d,forced){
   const dmg=forced??dmgCalc(a,d,a.r,a.c);
   const before=bars(d);
-  d.hp-=dmg; blip(a.s==='sm'?180:120,.12,'square',.06); vib(25);
+  d.hp-=dmg; play(a.s==='sm'?AUDIO.HIT_SM:AUDIO.HIT_ORK); vib(VIB.HIT);
   const el=board.querySelector('.u[data-id="'+d.id+'"]');
-  if(el){el.classList.add('hit');setTimeout(()=>el.classList.remove('hit'),260);}
-  floatFX(d.r,d.c,'−'+(dmg/10).toFixed(1).replace('.',',')+' PV');
-  await sleep(300);
-  if(d.hp<=0){d.hp=0;killed(d);floatFX(d.r,d.c,'DÉTRUIT','kill');blip(70,.3,'sawtooth',.05);}
+  if(el){el.classList.add('hit');setTimeout(()=>el.classList.remove('hit'),T.HIT_ANIM);}
+  floatFX(d.r,d.c,'−'+(dmg/HP_PER_BAR).toFixed(1).replace('.',',')+' PV');
+  await sleep(T.STRIKE_PAUSE);
+  if(d.hp<=0){d.hp=0;killed(d);floatFX(d.r,d.c,'DÉTRUIT','kill');play(AUDIO.DESTROY);}
   render();
 }
 function killed(d){
-  S.blds.forEach(b=>{if(b.r===d.r&&b.c===d.c&&b.cap<20)b.cap=20;});
+  S.blds.forEach(b=>{if(b.r===d.r&&b.c===d.c&&b.cap<CAPTURE_GAUGE)b.cap=CAPTURE_GAUGE;});
   render();
 }
 function capture(){
   const u=S.sel,b=bldAt(u.r,u.c);
-  b.cap-=bars(u); u.capturing=true; blip(440,.12,'triangle',.05);
+  b.cap-=bars(u); u.capturing=true; play(AUDIO.CAPTURE);
   if(b.cap<=0){
-    b.cap=20; b.own=u.s; u.capturing=false;
+    b.cap=CAPTURE_GAUGE; b.own=u.s; u.capturing=false;
     msg(b.kind==='hq'?"Forteresse prise !":"Bastion sécurisé. +1 réquisition par cycle.");
   }
   finishUnit(u);
@@ -870,8 +831,8 @@ function buy(t){
   const hq=S.blds.find(b=>b.kind==='hq'&&b.own===S.side);
   if(U[t].cost>S.req[S.side])return;
   S.req[S.side]-=U[t].cost;
-  S.units.push({id:uid++,t,s:S.side,r:hq.r,c:hq.c,hp:100,acted:true});
-  blip(660,.1,'triangle',.05); S.phase='idle'; render();
+  S.units.push({id:uid++,t,s:S.side,r:hq.r,c:hq.c,hp:UNIT_MAX_HP,acted:true});
+  play(AUDIO.DEPLOY); S.phase='idle'; render();
   msg(U[t].n+" déployé. Il entrera en action au prochain cycle.");
 }
 
@@ -883,7 +844,7 @@ function startTurn(side){
   S.units.filter(u=>u.s===side&&u.hp>0).forEach(u=>{
     u.acted=false;u.moved=false;
     const b=bldAt(u.r,u.c);
-    if(b&&b.own===side&&u.hp<100){u.hp=Math.min(100,u.hp+20);}
+    if(b&&b.own===side&&u.hp<UNIT_MAX_HP){u.hp=Math.min(UNIT_MAX_HP,u.hp+BUILDING_HEAL);}
   });
   S.sel=null;S.phase=side==='sm'?'idle':'ai';S.targets=[];S.pending=null;
   render();
@@ -893,7 +854,7 @@ function startTurn(side){
 function endTurn(){
   if(S.over)return;
   S.sel=null;S.phase='ai';S.targets=[];render();
-  startTurn('ork'); setTimeout(aiTurn,700);
+  startTurn('ork'); setTimeout(aiTurn,T.AI_TURN_START);
 }
 function checkEnd(){
   const smHQ=S.hq.sm, orkHQ=S.hq.ork;
@@ -923,26 +884,27 @@ function costField(tr,tc,cls){
 async function aiTurn(){
   if(S.over)return;
   aiBuy();
-  await sleep(350);
+  await sleep(T.AI_OPENING);
   const list=S.units.filter(u=>u.hp>0&&u.s==='ork').sort((a,b)=>U[b.t].rng[1]-U[a.t].rng[1]);
   for(const u of list){
     if(S.over)return;
     if(u.hp<=0||u.acted)continue;
     await aiAct(u);
     if(checkEnd())return;
-    await sleep(200);
+    await sleep(T.AI_UNIT_PAUSE);
   }
-  await sleep(250);
+  await sleep(T.AI_CLOSING);
   startTurn('sm');
 }
 function aiBuy(){
   const hq=S.blds.find(b=>b.kind==='hq'&&b.own==='ork');
   if(!hq||unitAt(hq.r,hq.c))return;
-  const r=S.req.ork, pick = r>=9&&Math.random()<.4?'bat' : r>=8&&Math.random()<.5?'ddr' : r>=6&&Math.random()<.4?'loo'
-        : r>=5&&Math.random()<.5?'nob' : r>=4&&Math.random()<.35?'bug' : r>=2?'boy':null;
-  if(!pick)return;
+  const r=S.req.ork;
+  const choice=AI.BUY.find(o=>r>=o.req&&(o.p>=1||Math.random()<o.p));
+  if(!choice)return;
+  const pick=choice.t;
   S.req.ork-=U[pick].cost;
-  S.units.push({id:uid++,t:pick,s:'ork',r:hq.r,c:hq.c,hp:100,acted:true});
+  S.units.push({id:uid++,t:pick,s:'ork',r:hq.r,c:hq.c,hp:UNIT_MAX_HP,acted:true});
   render();
 }
 async function aiAct(u){
@@ -954,18 +916,19 @@ async function aiAct(u){
     for(const e of targetsFrom(u,r,c)){
       const d=dmgCalc(u,e,r,c), kill=d>=e.hp;
       const ct=kill?0:counterOf(u,e,r,c);
-      const sc=Math.min(d,e.hp)*1 + (kill?70:0) - ct*.9 + TDEF[tile(r,c)]*3 + U[e.t].cost*2
-               + (U[e.t].rng[1]>1?12:0);
+      const sc=Math.min(d,e.hp)*1 + (kill?AI.KILL_BONUS:0) - ct*AI.COUNTER_WEIGHT
+               + TDEF[tile(r,c)]*AI.TERRAIN_WEIGHT + U[e.t].cost*AI.COST_WEIGHT
+               + (U[e.t].rng[1]>1?AI.INDIRECT_BONUS:0);
       if(!best||sc>best.sc)best={sc,r,c,e};
     }
   }
-  if(best&&best.sc>4){
+  if(best&&best.sc>AI.ATTACK_THRESHOLD){
     await aiMove(u,best.r,best.c);
     S.targets=[best.e]; S.pending={t:best.e};
     const dt=dmgDetail(u,best.e,u.r,u.c), tB=bars(best.e), uB=bars(u);
     await strike(u,best.e);
     let ct=0;
-    if(best.e.hp>0){ct=counterOf(u,best.e,u.r,u.c);if(ct){await sleep(150);await strike(best.e,u,ct);}}
+    if(best.e.hp>0){ct=counterOf(u,best.e,u.r,u.c);if(ct){await sleep(T.AI_COUNTER_DELAY);await strike(best.e,u,ct);}}
     msg(`${U[u.t].n} inflige <b>${dt.dmg}</b> (${toPV(dt.dmg)} PV) · ${U[best.e.t].n} ${tB} → ${best.e.hp<=0?'<span class="dead">détruit</span>':bars(best.e)}`
       +(ct?` — riposte <b>${ct}</b> · ${U[u.t].n} ${uB} → ${u.hp<=0?'<span class="dead">détruit</span>':bars(u)}`:''));
     u.acted=true;u.moved=false;S.sel=null;S.targets=[];render();return;
@@ -982,7 +945,7 @@ async function aiAct(u){
   let tgt=null,bd=1e9;
   const cands=S.units.filter(e=>e.hp>0&&e.s==='sm');
   const objs=S.blds.filter(b=>b.own!=='ork');
-  [...cands.map(e=>({r:e.r,c:e.c,w:0})),...objs.map(b=>({r:b.r,c:b.c,w:U[u.t].inf?-3:6}))].forEach(o=>{
+  [...cands.map(e=>({r:e.r,c:e.c,w:0})),...objs.map(b=>({r:b.r,c:b.c,w:U[u.t].inf?AI.OBJ_WEIGHT_INF:AI.OBJ_WEIGHT_NONINF}))].forEach(o=>{
     const d=Math.abs(o.r-u.r)+Math.abs(o.c-u.c)+o.w;
     if(d<bd){bd=d;tgt=o;}
   });
@@ -990,7 +953,7 @@ async function aiAct(u){
     const field=costField(tgt.r,tgt.c,U[u.t].cls);
     let bk=null,bv=1e9;
     for(const k of spots){
-      const v=(field.get(k)??1e9)-TDEF[tile((k/COLS)|0,k%COLS)]*.3;
+      const v=(field.get(k)??1e9)-TDEF[tile((k/COLS)|0,k%COLS)]*AI.ADVANCE_COVER_WEIGHT;
       if(v<bv){bv=v;bk=k;}
     }
     if(bk!=null&&bk!==key(u.r,u.c)) await aiMove(u,(bk/COLS)|0,bk%COLS);
@@ -1002,7 +965,7 @@ async function aiMove(u,r,c){
   for(const k of path){
     u.r=(k/COLS)|0;u.c=k%COLS;
     if(el)el.style.transform=`translate(${u.c*TS}px,${u.r*TS}px)`;
-    await sleep(80);
+    await sleep(T.AI_STEP);
   }
   u.moved=path.length>0; render();
 }
@@ -1021,9 +984,9 @@ function unitCard(u,foe){
   por.className='por '+u.s; por.innerHTML=svg(u.t);
   $('nm').textContent=d.n;
   $('stats').innerHTML=
-    stat('PV',bars(u)+'/10')+stat('MVT',d.mv)+stat('PORTÉE',d.rng[1]>1?d.rng[0]+'-'+d.rng[1]:'1')+
+    stat('PV',bars(u)+'/'+BARS_MAX)+stat('MVT',d.mv)+stat('PORTÉE',d.rng[1]>1?d.rng[0]+'-'+d.rng[1]:'1')+
     stat('ANTI-INF',d.dmg.inf)+stat('ANTI-BLD',d.dmg.veh)+stat('BLINDAGE',d.armor==='veh'?'lourd':'léger')+
-    stat('TERRAIN','+'+(TDEF[tile(u.r,u.c)]+d.df)*5+'%');
+    stat('TERRAIN','+'+(TDEF[tile(u.r,u.c)]+d.df)*DEF_POINT_PCT+'%');
 }
 function hideCard(){$('card').style.display='none';}
 function inspect(u){
@@ -1037,36 +1000,36 @@ function inspect(u){
 function showTerrain(r,c){
   hideCard();
   const t=tile(r,c),b=bldAt(r,c);
-  let s=`<b>${TNAME[t]}</b> — défense +${TDEF[t]*5}%`;
+  let s=`<b>${TNAME[t]}</b> — défense +${TDEF[t]*DEF_POINT_PCT}%`;
   if(b) s+= b.own?` · contrôlé par ${b.own==='sm'?'les Astartes':'les Orks'}`:' · neutre';
   msg(s); renderHud(true);
 }
 function addBtn(label,cls,fn,dis){
   const b=document.createElement('button');
   b.className='btn '+(cls||''); b.textContent=label; b.disabled=!!dis;
-  b.onclick=()=>{blip(700,.04,'square',.03);vib(10);fn();};
+  b.onclick=()=>{play(AUDIO.BUTTON);vib(VIB.BUTTON);fn();};
   $('acts').appendChild(b);
 }
 /* ---- relevé de combat ---- */
 const fmtx=x=>x.toFixed(2).replace('.',',');
-const toPV=n=>(n/10).toFixed(1).replace('.',',');
+const toPV=n=>(n/HP_PER_BAR).toFixed(1).replace('.',',');
 const chip=u=>`<span class="who ${u.s}">${svg(u.t)}</span>`;
 function crow(l,v,cls){return `<div class="crow ${cls||''}"><div class="l">${l}</div><div class="v">${v||''}</div></div>`;}
 function pipRow(u,after){
-  const cur=bars(u), aft=after<=0?0:Math.max(1,Math.ceil(after/10));
+  const cur=bars(u), aft=after<=0?0:Math.max(1,Math.ceil(after/HP_PER_BAR));
   let h='<div class="pips">';
-  for(let i=1;i<=10;i++) h+=`<div class="pip ${i<=aft?u.s:(i<=cur?'lost':'')}"></div>`;
+  for(let i=1;i<=BARS_MAX;i++) h+=`<div class="pip ${i<=aft?u.s:(i<=cur?'lost':'')}"></div>`;
   return h+`</div><div class="plabel">${U[u.t].n} · <b>${cur} → ${aft===0?'<span class="dead">détruit</span>':aft}</b> PV</div>`;
 }
 function calcBlock(a,d,dt,title){
   let h=`<div class="cs">${title}</div>`;
   h+=crow(`Puissance de feu<small>${U[a.t].n} contre blindage ${dt.armor==='veh'?'lourd':'léger'}</small>`,dt.base);
   if(dt.sc!==1) h+=crow(
-      `Attaquant à ${Math.round(dt.raw*10)}/10 PV`+(dt.codex?'<small>Discipline du Codex : plancher à 0,60</small>':''),
+      `Attaquant à ${Math.round(dt.raw*BARS_MAX)}/${BARS_MAX} PV`+(dt.codex?'<small>Discipline du Codex : plancher à '+fmtx(CODEX_FLOOR)+'</small>':''),
       '×'+fmtx(dt.sc), dt.codex?'pos':'neg');
   if(dt.orks) h+=crow(`Waaagh! · ${dt.orks} ork${dt.orks>1?'s':''} au contact`,'×'+fmtx(dt.mob),'pos');
-  if(dt.tdef) h+=crow(`Couvert · ${TNAME[tile(d.r,d.c)]}`,'−'+dt.tdef*5+'%','neg');
-  if(dt.udef) h+=crow('Blindage lourd de la cible','−'+dt.udef*5+'%','neg');
+  if(dt.tdef) h+=crow(`Couvert · ${TNAME[tile(d.r,d.c)]}`,'−'+dt.tdef*DEF_POINT_PCT+'%','neg');
+  if(dt.udef) h+=crow('Blindage lourd de la cible','−'+dt.udef*DEF_POINT_PCT+'%','neg');
   if(dt.tdef+dt.udef) h+=crow('Défense cumulée','×'+fmtx(dt.red),'neg');
   if(dt.plancher) h+=crow('Plancher minimum de dégâts','= 5','pos');
   return h+`<div class="ctot"><div class="l">Dégâts</div><div class="big">${dt.dmg}</div><div class="pv">soit ${toPV(dt.dmg)} PV</div></div>`;
@@ -1132,8 +1095,8 @@ function renderHud(keepMsg){
     renderCombat();
     bar.style.display='flex';
     bar.innerHTML=
-      `<div class="side">Cible · ${U[p.t.t].n}<br><span class="big ${p.hpAfter===0?'dead':''}">${bars(p.t)} → ${p.hpAfter===0?'détruite':Math.max(1,Math.ceil(p.hpAfter/10))}</span></div>`+
-      `<div class="side" style="text-align:right">Riposte subie<br><span class="big ${p.myAfter===0?'dead':''}">${bars(S.sel)} → ${p.ct===0?'aucune':(p.myAfter===0?'détruite':Math.max(1,Math.ceil(p.myAfter/10)))}</span></div>`;
+      `<div class="side">Cible · ${U[p.t.t].n}<br><span class="big ${p.hpAfter===0?'dead':''}">${bars(p.t)} → ${p.hpAfter===0?'détruite':Math.max(1,Math.ceil(p.hpAfter/HP_PER_BAR))}</span></div>`+
+      `<div class="side" style="text-align:right">Riposte subie<br><span class="big ${p.myAfter===0?'dead':''}">${bars(S.sel)} → ${p.ct===0?'aucune':(p.myAfter===0?'détruite':Math.max(1,Math.ceil(p.myAfter/HP_PER_BAR)))}</span></div>`;
     msg("");
     addBtn('Confirmer l\'attaque','warn',()=>confirmAttack());
     addBtn('Autre cible','ghost',()=>{S.phase='target';render();});
@@ -1147,7 +1110,7 @@ function renderHud(keepMsg){
       const b=document.createElement('button');
       b.className='sh'; b.disabled=U[t].cost>S.req[S.side];
       b.innerHTML=svg(t)+`<div class="n">${U[t].n}</div><div class="c">${U[t].cost}</div>`;
-      b.onclick=()=>{blip(700,.04);buy(t);};
+      b.onclick=()=>{play(AUDIO.SHOP);buy(t);};
       sh.appendChild(b);
     });
     msg("Réquisition disponible : <b>"+S.req[S.side]+"</b>. L'unité arrive à la forteresse.");
@@ -1179,6 +1142,7 @@ function blip(f,d,type,vol){
   }catch(e){}
 }
 function vib(ms){if(navigator.vibrate&&!muted)navigator.vibrate(ms);}
+const play=s=>blip(s.f,s.d,s.type,s.vol);
 
 /* ============================================================ MODALE */
 function codex(){
@@ -1300,7 +1264,7 @@ function showEnd(win){
   $('modal').classList.add('show');
   $('btnClose').textContent='Nouvelle bataille';
   $('btnClose').onclick=()=>{closeModal();newGame();openCodex(true);};
-  blip(win==='sm'?520:160,.5,'triangle',.06);
+  play(win==='sm'?AUDIO.VICTORY:AUDIO.DEFEAT);
 }
 function closeModal(){$('modal').classList.remove('show');}
 $('btnClose').onclick=closeModal;
